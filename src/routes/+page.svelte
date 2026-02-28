@@ -1,280 +1,266 @@
 <script lang="ts">
-	import { Github, Activity, Terminal } from 'lucide-svelte';
+	import { Github, Activity, Terminal, Menu, X, Copy, Check } from 'lucide-svelte';
+
+	let mobileMenuOpen = $state(false);
+	let copied = $state(false);
+
+	function copyInstallCommand() {
+		navigator.clipboard.writeText('brew install cignaler');
+		copied = true;
+		setTimeout(() => (copied = false), 2000);
+	}
+
+	// Intersection Observer action for scroll-triggered animations
+	function reveal(node: HTMLElement, options: { delay?: number; threshold?: number } = {}) {
+		const { delay = 0, threshold = 0.15 } = options;
+
+		node.style.opacity = '0';
+		node.style.transform = 'translateY(24px)';
+		node.style.transition = `opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						node.style.opacity = '1';
+						node.style.transform = 'translateY(0)';
+						observer.unobserve(node);
+					}
+				});
+			},
+			{ threshold }
+		);
+
+		observer.observe(node);
+
+		return {
+			destroy() {
+				observer.disconnect();
+			}
+		};
+	}
 </script>
 
 <!-- Navigation Header -->
-<header class="sticky top-0 z-50 w-full border-b border-gray-200/40 bg-white/80 backdrop-blur-md">
+<header class="sticky top-0 z-50 w-full border-b border-warm-200/60 bg-white/80 backdrop-blur-md">
 	<div class="container mx-auto px-4 md:px-6">
 		<div class="flex h-16 items-center justify-between">
 			<!-- Logo -->
 			<div class="flex items-center gap-2">
-				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900/10 text-gray-900">
+				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-white">
 					<Activity class="h-5 w-5" />
 				</div>
-				<span class="text-xl font-bold tracking-tight text-gray-900">Cignaler</span>
+				<span class="font-display text-xl font-bold tracking-tight text-warm-900">Cignaler</span>
 			</div>
 
-			<!-- Navigation Links -->
-			<nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-				<a href="#features" class="transition-colors hover:text-gray-900">Features</a>
-				<a href="#how-it-works" class="transition-colors hover:text-gray-900">How it works</a>
-				<a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-gray-900">GitHub</a>
+			<!-- Navigation Links (Desktop) -->
+			<nav class="hidden md:flex items-center gap-8 text-sm font-medium text-warm-500">
+				<a href="#features" class="transition-colors hover:text-warm-900">Features</a>
+				<a href="#how-it-works" class="transition-colors hover:text-warm-900">How it works</a>
+				<a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-warm-900">GitHub</a>
 			</nav>
 
-			<!-- CTA Button -->
-			<div class="flex items-center gap-4">
-				<button class="items-center justify-center whitespace-nowrap rounded-md font-medium transition-colors h-8 px-3 text-xs hidden sm:flex bg-gray-900 text-white hover:bg-gray-800 shadow-sm">
-					Download App
+			<!-- CTA + Mobile Toggle -->
+			<div class="flex items-center gap-3">
+				<button class="hidden sm:flex items-center justify-center whitespace-nowrap rounded-lg font-display font-semibold transition-colors h-9 px-4 text-sm bg-warm-900 text-white hover:bg-warm-800 shadow-sm">
+					Install Cignaler
+				</button>
+				<button
+					class="flex md:hidden items-center justify-center h-9 w-9 rounded-lg text-warm-600 hover:bg-warm-100 transition-colors"
+					onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
+					aria-label="Toggle menu"
+				>
+					{#if mobileMenuOpen}
+						<X class="h-5 w-5" />
+					{:else}
+						<Menu class="h-5 w-5" />
+					{/if}
 				</button>
 			</div>
 		</div>
+
+		<!-- Mobile Menu -->
+		{#if mobileMenuOpen}
+			<nav class="md:hidden border-t border-warm-200/60 py-4 space-y-1">
+				<a href="#features" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors" onclick={() => (mobileMenuOpen = false)}>Features</a>
+				<a href="#how-it-works" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors" onclick={() => (mobileMenuOpen = false)}>How it works</a>
+				<a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors">GitHub</a>
+				<div class="pt-2">
+					<button class="w-full flex items-center justify-center rounded-lg font-display font-semibold h-10 text-sm bg-warm-900 text-white hover:bg-warm-800">
+						Install Cignaler
+					</button>
+				</div>
+			</nav>
+		{/if}
 	</div>
 </header>
 
 <!-- Hero Section -->
-<section class="relative overflow-hidden bg-white pt-32 pb-40 selection:bg-orange-500/20">
-	<!-- Animated Background Pattern -->
+<section class="relative overflow-hidden bg-white pt-24 md:pt-32 pb-32 md:pb-40 selection:bg-brand-500/20">
+	<!-- Dot grid background only (removed glow blobs) -->
 	<div
-		class="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"
-	></div>
-
-	<!-- Animated Glow Blobs -->
-	<div
-		class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-orange-500/5 rounded-full blur-[120px] -z-10"
-		style="animation: var(--animate-pulse-slow)"
-	></div>
-	<div
-		class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[100px] -z-10"
+		class="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e8e6e1_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)]"
 	></div>
 
 	<div class="container mx-auto px-4 md:px-6 relative z-10">
 		<!-- Hero Content -->
-		<div class="flex flex-col items-center text-center max-w-5xl mx-auto mb-20">
+		<div class="flex flex-col items-center text-center max-w-5xl mx-auto mb-24">
 			<!-- Badge -->
-			<div class="mb-8">
+			<div class="mb-8" use:reveal>
 				<div
-					class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white/50 backdrop-blur-sm px-4 py-1.5 text-sm font-medium text-gray-900 shadow-sm hover:bg-white/80 transition-colors cursor-default"
+					class="inline-flex items-center gap-2 rounded-full border border-warm-200 bg-white/60 backdrop-blur-sm px-4 py-1.5 text-sm font-medium text-warm-900 shadow-sm"
 				>
 					<span class="relative flex h-2 w-2">
-						<span
-							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
-						></span>
-						<span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+						<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-400 opacity-75"></span>
+						<span class="relative inline-flex rounded-full h-2 w-2 bg-accent-500"></span>
 					</span>
-					<span class="text-gray-600">v2.0 is live:</span>
-					<span class="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-blue-600"
-						>Intelligent Watchers</span
-					>
+					<span class="text-warm-500">v2.0 is live:</span>
+					<span class="font-semibold text-brand-600">Intelligent Watchers</span>
 				</div>
 			</div>
 
 			<!-- Main Heading -->
 			<h1
-				class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-gray-900 mb-8 leading-[1.1]"
+				class="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-warm-900 mb-8 leading-[1.05]"
+				use:reveal={{ delay: 100 }}
 			>
 				Stop staring at
 				<br />
-				<span
-					class="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-[length:200%_auto] pb-2"
-					style="animation: var(--animate-gradient-x)"
-				>
+				<span class="relative inline-block text-brand-600 pb-2">
 					broken pipelines.
 					<svg
-						class="absolute w-full h-4 -bottom-1 left-0 text-orange-500 opacity-50"
+						class="absolute w-full h-4 -bottom-1 left-0 text-brand-500/30"
 						viewBox="0 0 100 10"
 						preserveAspectRatio="none"
 					>
-						<path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="4" fill="none" />
+						<path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="3" fill="none" />
 					</svg>
 				</span>
 			</h1>
 
 			<!-- Subheading -->
 			<p
-				class="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed"
+				class="text-xl md:text-2xl text-warm-500 max-w-2xl mx-auto mb-10 leading-relaxed"
+				use:reveal={{ delay: 200 }}
 			>
 				Cignaler filters the noise. Get notified only when the builds
-				<span class="text-gray-900 font-semibold">you care about</span> actually break.
+				<span class="text-warm-900 font-semibold">you care about</span> actually break.
 			</p>
 
 			<!-- CTAs -->
-			<div
-				class="flex flex-col sm:flex-row items-center gap-4"
-			>
+			<div class="flex flex-col sm:flex-row items-center gap-4" use:reveal={{ delay: 300 }}>
 				<button
-					class="h-14 px-8 text-lg rounded-full bg-orange-500 text-white font-medium shadow-xl shadow-orange-500/20 hover:shadow-orange-500/30 transition-all hover:scale-105"
+					class="h-14 px-8 text-lg rounded-full bg-brand-500 text-white font-display font-semibold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 hover:bg-brand-600 transition-all hover:scale-[1.03] flex items-center gap-2"
 				>
-					Get Started
+					<Terminal class="h-5 w-5" />
+					Install Cignaler
 				</button>
 				<button
-					class="h-14 px-8 text-lg rounded-full border-2 border-gray-300 bg-white text-gray-900 font-medium hover:bg-gray-50 transition-all flex items-center gap-2"
+					class="h-14 px-8 text-lg rounded-full border-2 border-warm-300 bg-white text-warm-900 font-display font-semibold hover:bg-warm-50 transition-all flex items-center gap-2"
 				>
 					<Github class="h-5 w-5" />
 					Star on GitHub
 				</button>
 			</div>
 
-			<!-- Trust Indicators -->
-			<div
-				class="mt-6 flex items-center gap-6 text-sm text-gray-500"
-			>
-				<div class="flex items-center gap-2">
-					<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-					</svg>
-					No credit card required
-				</div>
-				<div class="flex items-center gap-2">
-					<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-					</svg>
-					14-day trial
-				</div>
-				<div class="flex items-center gap-2">
-					<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-					</svg>
-					Cancel anytime
-				</div>
+			<!-- Install command -->
+			<div class="mt-6" use:reveal={{ delay: 400 }}>
+				<button
+					onclick={copyInstallCommand}
+					class="inline-flex items-center gap-3 rounded-xl bg-warm-900 px-5 py-2.5 font-mono text-sm text-warm-300 hover:bg-warm-800 transition-colors group"
+				>
+					<span class="text-warm-500">$</span>
+					<span>brew install cignaler</span>
+					{#if copied}
+						<Check class="h-4 w-4 text-accent-400" />
+					{:else}
+						<Copy class="h-4 w-4 text-warm-500 group-hover:text-warm-300 transition-colors" />
+					{/if}
+				</button>
 			</div>
 		</div>
 
-		<!-- Product Screenshot with Animations -->
-		<div class="relative max-w-6xl mx-auto">
+		<!-- Product Screenshot -->
+		<div class="relative max-w-5xl mx-auto" use:reveal={{ delay: 200 }}>
 			<div class="relative group">
 				<!-- Glow Effect Behind Screenshot -->
 				<div
-					class="absolute inset-0 bg-gradient-to-tr from-orange-500/30 to-purple-500/30 blur-[80px] rounded-[3rem] opacity-40 group-hover:opacity-60 transition-opacity duration-700"
+					class="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-accent-500/20 blur-[80px] rounded-[3rem] opacity-40 group-hover:opacity-60 transition-opacity duration-700"
 				></div>
 
 				<!-- Main Screenshot Container -->
 				<div
-					class="relative bg-gray-950 rounded-2xl border border-gray-800/50 shadow-2xl overflow-hidden ring-1 ring-white/10"
+					class="relative bg-warm-950 rounded-2xl border border-warm-800/50 shadow-2xl overflow-hidden ring-1 ring-white/10"
 				>
 					<!-- Browser Chrome -->
-					<div
-						class="h-12 bg-gray-900/50 backdrop-blur-md border-b border-white/5 flex items-center px-6 justify-between"
-					>
+					<div class="h-12 bg-warm-900/50 backdrop-blur-md border-b border-white/5 flex items-center px-6 justify-between">
 						<div class="flex gap-2">
 							<div class="h-3 w-3 rounded-full bg-[#FF5F56] border border-[#E0443E]"></div>
 							<div class="h-3 w-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]"></div>
 							<div class="h-3 w-3 rounded-full bg-[#27C93F] border border-[#1AAB29]"></div>
 						</div>
-						<div class="text-xs font-mono text-gray-500 flex items-center gap-2">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								class="h-3 w-3"
-							>
-								<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-							</svg>
+						<div class="text-xs font-mono text-warm-500 flex items-center gap-2">
+							<Activity class="h-3 w-3" />
 							cignaler-pro
 						</div>
 						<div class="w-16"></div>
 					</div>
 
 					<!-- Dashboard Content -->
-					<div class="relative aspect-[16/10] bg-gray-900 w-full overflow-hidden">
+					<div class="relative aspect-[16/10] bg-warm-900 w-full overflow-hidden">
 						<div class="p-6">
 							<div class="mb-4 flex items-center justify-between">
 								<div class="flex items-center gap-3">
-									<div class="rounded-lg bg-orange-500 px-3 py-1.5 text-sm font-medium text-white">
-										All Pipelines
-									</div>
-									<div class="rounded-lg bg-white px-3 py-1.5 text-sm text-gray-600">Failed (3)</div>
+									<div class="rounded-lg bg-brand-500 px-3 py-1.5 text-sm font-medium text-white">All Pipelines</div>
+									<div class="rounded-lg bg-white px-3 py-1.5 text-sm text-warm-600">Failed (3)</div>
 								</div>
-								<button class="rounded-lg bg-gray-900 px-4 py-2 text-sm text-white border border-gray-700">
-									View all workflows
-								</button>
+								<button class="rounded-lg bg-warm-900 px-4 py-2 text-sm text-white border border-warm-700">View all workflows</button>
 							</div>
 
 							<div class="space-y-3">
-								<!-- Pipeline item 1 -->
 								<div class="flex items-center gap-4 rounded-lg bg-white p-4 shadow-sm">
 									<div class="flex h-2 w-2 rounded-full bg-red-500"></div>
 									<div class="flex-1">
-										<div class="mb-1 font-medium text-gray-900">Backend API</div>
-										<div class="text-sm text-gray-500">main branch • 2 minutes ago</div>
+										<div class="mb-1 font-medium text-warm-900">Backend API</div>
+										<div class="text-sm text-warm-500">main branch &bull; 2 minutes ago</div>
 									</div>
-									<div class="text-sm text-gray-500">Deploy failed</div>
+									<div class="text-sm text-warm-500">Deploy failed</div>
 								</div>
-
-								<!-- Pipeline item 2 -->
 								<div class="flex items-center gap-4 rounded-lg bg-white p-4 shadow-sm">
 									<div class="flex h-2 w-2 rounded-full bg-green-500"></div>
 									<div class="flex-1">
-										<div class="mb-1 font-medium text-gray-900">Frontend Build</div>
-										<div class="text-sm text-gray-500">develop branch • 5 minutes ago</div>
+										<div class="mb-1 font-medium text-warm-900">Frontend Build</div>
+										<div class="text-sm text-warm-500">develop branch &bull; 5 minutes ago</div>
 									</div>
-									<div class="text-sm text-gray-500">Success</div>
+									<div class="text-sm text-warm-500">Success</div>
 								</div>
-
-								<!-- Pipeline item 3 -->
 								<div class="flex items-center gap-4 rounded-lg bg-white p-4 shadow-sm">
 									<div class="flex h-2 w-2 rounded-full bg-red-500"></div>
 									<div class="flex-1">
-										<div class="mb-1 font-medium text-gray-900">Tests</div>
-										<div class="text-sm text-gray-500">feature/auth • 12 minutes ago</div>
+										<div class="mb-1 font-medium text-warm-900">Tests</div>
+										<div class="text-sm text-warm-500">feature/auth &bull; 12 minutes ago</div>
 									</div>
-									<div class="text-sm text-gray-500">Tests failed</div>
+									<div class="text-sm text-warm-500">Tests failed</div>
 								</div>
 							</div>
 						</div>
-
 						<!-- Gradient Overlay -->
-						<div
-							class="absolute inset-0 bg-gradient-to-t from-gray-950/50 to-transparent pointer-events-none"
-						></div>
+						<div class="absolute inset-0 bg-gradient-to-t from-warm-950/50 to-transparent pointer-events-none"></div>
 					</div>
 				</div>
 
-				<!-- Floating Cards -->
-				<!-- Success Card (Left) -->
+				<!-- Single Floating Card (simplified from two) -->
 				<div
-					class="absolute -left-12 top-1/3 p-4 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-200 hidden lg:block"
+					class="absolute -left-8 top-1/3 p-4 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-warm-200 hidden lg:block"
 					style="animation: var(--animate-float)"
 				>
 					<div class="flex items-center gap-3">
 						<div class="h-10 w-10 bg-green-100 rounded-lg flex items-center justify-center">
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								class="h-5 w-5 text-green-600"
-							>
-								<polyline points="4 17 10 11 4 5"></polyline>
-								<line x1="12" x2="20" y1="19" y2="19"></line>
-							</svg>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-600"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>
 						</div>
 						<div>
-							<div class="text-xs text-gray-600 font-medium">Build Passed</div>
-							<div class="text-sm font-bold text-gray-900">frontend/main</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Alert Card (Right) -->
-				<div
-					class="absolute -right-8 bottom-1/4 p-4 bg-gray-900 text-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-gray-700 hidden lg:block"
-					style="animation: var(--animate-float-delayed)"
-				>
-					<div class="flex items-center gap-3">
-						<div class="h-2 w-2 rounded-full bg-red-500 animate-pulse"></div>
-						<div class="text-sm font-medium">
-							1 failure ignored <span class="text-gray-400 text-xs ml-1">(noise)</span>
+							<div class="text-xs text-warm-500 font-medium">Build Passed</div>
+							<div class="text-sm font-bold text-warm-900">frontend/main</div>
 						</div>
 					</div>
 				</div>
@@ -283,97 +269,115 @@
 	</div>
 </section>
 
-<!-- Problems Section -->
-<section class="py-24 bg-gray-50/50 relative overflow-hidden">
-	<div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-		<div class="absolute top-[10%] left-[-5%] w-[30%] h-[30%] bg-red-500/5 rounded-full blur-3xl"></div>
-		<div class="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] bg-blue-500/5 rounded-full blur-3xl"></div>
+<!-- Social Proof / Works With Section -->
+<section class="py-16 bg-warm-50 border-y border-warm-200/60">
+	<div class="container mx-auto px-4 md:px-6">
+		<div class="flex flex-col items-center text-center" use:reveal>
+			<p class="text-sm font-medium text-warm-400 uppercase tracking-wider mb-8">Works with your CI stack</p>
+			<div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+				<!-- GitHub Actions -->
+				<div class="flex items-center gap-3 text-warm-400 hover:text-warm-600 transition-colors">
+					<Github class="h-6 w-6" />
+					<span class="font-display font-semibold text-lg">GitHub Actions</span>
+				</div>
+				<!-- GitLab CI -->
+				<div class="flex items-center gap-3 text-warm-400 hover:text-warm-600 transition-colors">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-6 w-6"><path d="m22 13.29-3.33-10a.42.42 0 0 0-.14-.18.38.38 0 0 0-.22-.11.39.39 0 0 0-.23.07.42.42 0 0 0-.14.18l-2.26 6.67H8.32L6.1 3.26a.42.42 0 0 0-.1-.18.38.38 0 0 0-.26-.08.39.39 0 0 0-.23.07.42.42 0 0 0-.14.18L2 13.29a.74.74 0 0 0 .27.83L12 21l9.69-6.88a.71.71 0 0 0 .31-.83Z"/></svg>
+					<span class="font-display font-semibold text-lg">GitLab CI</span>
+				</div>
+				<!-- CircleCI -->
+				<div class="flex items-center gap-3 text-warm-400 hover:text-warm-600 transition-colors">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-6 w-6"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+					<span class="font-display font-semibold text-lg">CircleCI</span>
+				</div>
+			</div>
+		</div>
 	</div>
+</section>
 
+<!-- Problems Section -->
+<section class="py-20 bg-white relative overflow-hidden">
 	<div class="container mx-auto px-4 md:px-6 relative z-10">
-		<div class="mx-auto max-w-3xl text-center mb-16">
-			<h2 class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6">
+		<div class="mx-auto max-w-3xl text-center mb-16" use:reveal>
+			<h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight text-warm-900 mb-6">
 				CI dashboards are <span class="text-red-600 relative inline-block">noisy
 					<svg class="absolute w-full h-3 -bottom-1 left-0 text-red-600/20" viewBox="0 0 100 10" preserveAspectRatio="none">
 						<path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="3" fill="none" />
 					</svg>
 				</span>.
 			</h2>
-			<p class="text-xl text-gray-600 leading-relaxed">
+			<p class="text-xl text-warm-500 leading-relaxed">
 				Most developer tools show you the world, when all you wanted was your own backyard. Stop scrolling through hundreds of pipelines you don't own.
 			</p>
 		</div>
 
-		<div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-			<!-- Alert Fatigue Card -->
-			<div class="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all">
-				<div class="mb-6 h-40 bg-gray-50 rounded-xl border border-gray-200/50 overflow-hidden relative flex flex-col p-3 gap-2">
-					<div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/80 z-10"></div>
-					<div class="h-8 w-full rounded border flex items-center px-2 gap-2 bg-white border-gray-200/60 opacity-100">
-						<div class="h-2 w-2 rounded-full bg-gray-200"></div>
-						<div class="h-2 w-2/3 bg-gray-100 rounded"></div>
+		<!-- Editorial-style problem cards (no borders, large type, illustration-forward) -->
+		<div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+			<!-- Alert Fatigue -->
+			<div class="group" use:reveal={{ delay: 0 }}>
+				<div class="mb-6 h-44 bg-warm-50 rounded-2xl overflow-hidden relative flex flex-col p-4 gap-2">
+					<div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/90 z-10"></div>
+					<div class="h-8 w-full rounded-lg flex items-center px-3 gap-2 bg-white border border-warm-200/60">
+						<div class="h-2 w-2 rounded-full bg-warm-200"></div>
+						<div class="h-2 w-2/3 bg-warm-100 rounded"></div>
 					</div>
-					<div class="h-8 w-full rounded border flex items-center px-2 gap-2 bg-white border-gray-200/60 opacity-85">
-						<div class="h-2 w-2 rounded-full bg-gray-200"></div>
-						<div class="h-2 w-2/3 bg-gray-100 rounded"></div>
+					<div class="h-8 w-full rounded-lg flex items-center px-3 gap-2 bg-white border border-warm-200/60 opacity-80">
+						<div class="h-2 w-2 rounded-full bg-warm-200"></div>
+						<div class="h-2 w-2/3 bg-warm-100 rounded"></div>
 					</div>
-					<div class="h-8 w-full rounded border flex items-center px-2 gap-2 bg-red-50 border-red-100 opacity-70">
+					<div class="h-8 w-full rounded-lg flex items-center px-3 gap-2 bg-red-50 border border-red-100 opacity-60">
 						<div class="h-2 w-2 rounded-full bg-red-500"></div>
-						<div class="h-2 w-2/3 bg-gray-100 rounded"></div>
+						<div class="h-2 w-2/3 bg-warm-100 rounded"></div>
 					</div>
-					<div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 bg-white/90 backdrop-blur border border-gray-200 px-3 py-1 rounded-full text-[10px] font-medium text-gray-600 shadow-sm">
+					<div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-white/90 backdrop-blur border border-warm-200 px-3 py-1 rounded-full text-[10px] font-medium text-warm-500 shadow-sm">
 						+142 hidden
 					</div>
 				</div>
-				<h3 class="text-xl font-bold mb-2">Alert Fatigue</h3>
-				<p class="text-gray-600 text-sm">
+				<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Alert Fatigue</h3>
+				<p class="text-warm-500 text-sm leading-relaxed">
 					When 50 builds are failing, you stop checking. Relevant signals get lost in the noise of global failures.
 				</p>
 			</div>
 
-			<!-- Silent Failures Card -->
-			<div class="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all">
-				<div class="mb-6 h-40 bg-gray-50 rounded-xl border border-gray-200/50 overflow-hidden relative flex items-center justify-center">
-					<div class="relative z-10 bg-white p-4 rounded-xl shadow-lg border border-gray-200 flex items-center gap-3">
+			<!-- Silent Failures -->
+			<div class="group" use:reveal={{ delay: 100 }}>
+				<div class="mb-6 h-44 bg-warm-50 rounded-2xl overflow-hidden relative flex items-center justify-center">
+					<div class="relative z-10 bg-white p-4 rounded-xl shadow-lg border border-warm-200 flex items-center gap-3">
 						<div class="h-8 w-8 rounded-full bg-red-100 flex items-center justify-center">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-red-600">
-								<circle cx="12" cy="12" r="10"></circle>
-								<path d="m15 9-6 6"></path>
-								<path d="m9 9 6 6"></path>
-							</svg>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-red-600"><circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path></svg>
 						</div>
 						<div class="text-xs">
-							<div class="font-bold text-gray-900">Build Failed</div>
-							<div class="text-gray-600">2 hours ago</div>
+							<div class="font-bold text-warm-900">Build Failed</div>
+							<div class="text-warm-500">2 hours ago</div>
 						</div>
 					</div>
 				</div>
-				<h3 class="text-xl font-bold mb-2">Silent Failures</h3>
-				<p class="text-gray-600 text-sm">
+				<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Silent Failures</h3>
+				<p class="text-warm-500 text-sm leading-relaxed">
 					Critical failures on your branch can sit unnoticed for hours while you assume everything is fine.
 				</p>
 			</div>
 
-			<!-- Context Switching Card -->
-			<div class="group relative overflow-hidden rounded-3xl bg-white border border-gray-200 p-6 shadow-sm hover:shadow-md transition-all">
-				<div class="mb-6 h-40 bg-gray-50 rounded-xl border border-gray-200/50 overflow-hidden relative">
-					<div class="mt-4 ml-4 bg-white rounded-tl-lg shadow-xl border-l border-t border-gray-200 h-full relative">
-						<div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-tl-lg">
+			<!-- Context Switching -->
+			<div class="group" use:reveal={{ delay: 200 }}>
+				<div class="mb-6 h-44 bg-warm-50 rounded-2xl overflow-hidden relative">
+					<div class="mt-4 ml-4 bg-white rounded-tl-lg shadow-xl border-l border-t border-warm-200 h-full relative">
+						<div class="flex items-center gap-1 p-2 border-b border-warm-200 bg-warm-50 rounded-tl-lg">
 							<div class="h-2 w-2 rounded-full bg-red-400"></div>
 							<div class="h-2 w-2 rounded-full bg-yellow-400"></div>
 							<div class="h-2 w-2 rounded-full bg-green-400"></div>
 						</div>
 						<div class="p-3">
-							<div class="h-2 w-1/3 bg-gray-100 rounded mb-2"></div>
-							<div class="h-2 w-1/2 bg-gray-100 rounded"></div>
+							<div class="h-2 w-1/3 bg-warm-100 rounded mb-2"></div>
+							<div class="h-2 w-1/2 bg-warm-100 rounded"></div>
 						</div>
-						<div class="absolute -top-3 -right-4 bg-gray-800 text-white p-2 rounded-lg shadow-lg text-[10px] font-mono">
+						<div class="absolute -top-3 -right-4 bg-warm-800 text-white p-2 rounded-lg shadow-lg text-[10px] font-mono">
 							Checking...
 						</div>
 					</div>
 				</div>
-				<h3 class="text-xl font-bold mb-2">Context Switching</h3>
-				<p class="text-gray-600 text-sm">
+				<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Context Switching</h3>
+				<p class="text-warm-500 text-sm leading-relaxed">
 					Constantly tabbing back to GitHub/GitLab breaks your flow. It takes 15 minutes to recover focus.
 				</p>
 			</div>
@@ -382,269 +386,232 @@
 </section>
 
 <!-- Solution Section -->
-<section id="how-it-works" class="py-24 bg-gray-50/50">
+<section id="how-it-works" class="py-20 bg-warm-50/50">
 	<div class="container mx-auto px-4 md:px-6">
-		<div class="relative rounded-[2.5rem] bg-gray-900 border border-gray-800 overflow-hidden shadow-2xl">
-			<div class="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-			<div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+		<div class="relative rounded-[2rem] bg-warm-900 border border-warm-800 overflow-hidden shadow-2xl">
+			<div class="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+			<div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent-500/10 rounded-full blur-[100px] pointer-events-none"></div>
 
 			<div class="relative z-10 p-8 md:p-16">
-		<div class="grid lg:grid-cols-2 gap-12 items-center">
-			<div class="text-left">
-				<div class="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-4 py-1.5 text-sm font-medium text-white mb-8 backdrop-blur-md">
-					<span class="relative flex h-2 w-2">
-						<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-						<span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-					</span>
-					The Solution
-				</div>
-				<h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6 leading-tight">
-					Focus on <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-blue-400">your work</span>, not the dashboard.
-				</h2>
-				<p class="text-lg text-gray-400 mb-10 leading-relaxed">
-					Cignaler filters out the noise. Configure regex watchers to only track the branches and PRs you care about. When something breaks, you'll know. Otherwise, silence is golden.
-				</p>
+				<div class="grid lg:grid-cols-2 gap-12 items-center">
+					<div class="text-left">
+						<div class="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-4 py-1.5 text-sm font-medium text-white mb-8 backdrop-blur-md" use:reveal>
+							<span class="relative flex h-2 w-2">
+								<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-400 opacity-75"></span>
+								<span class="relative inline-flex rounded-full h-2 w-2 bg-accent-500"></span>
+							</span>
+							The Solution
+						</div>
+						<h2 class="font-display text-3xl md:text-5xl font-bold tracking-tight text-white mb-6 leading-tight" use:reveal={{ delay: 100 }}>
+							Focus on <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-accent-400">your work</span>, not the dashboard.
+						</h2>
+						<p class="text-lg text-warm-400 mb-10 leading-relaxed" use:reveal={{ delay: 200 }}>
+							Cignaler filters out the noise. Configure regex watchers to only track the branches and PRs you care about. When something breaks, you'll know. Otherwise, silence is golden.
+						</p>
 
-				<div class="space-y-6">
-					<div class="flex gap-4">
-						<div class="mt-1 h-6 w-6 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0 border border-orange-500/20">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 text-orange-500">
-								<path d="M20 6 9 17l-5-5"></path>
-							</svg>
-						</div>
-						<div>
-							<h4 class="text-base font-semibold text-white mb-1">Curated Watchers</h4>
-							<p class="text-sm text-gray-400">Add only the specific pipelines, branches, or PRs you are personally responsible for.</p>
-						</div>
-					</div>
-					<div class="flex gap-4">
-						<div class="mt-1 h-6 w-6 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0 border border-orange-500/20">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 text-orange-500">
-								<path d="M20 6 9 17l-5-5"></path>
-							</svg>
-						</div>
-						<div>
-							<h4 class="text-base font-semibold text-white mb-1">Passive Awareness</h4>
-							<p class="text-sm text-gray-400">A tiny icon in your system tray tells you the global health of your watched pipelines.</p>
-						</div>
-					</div>
-					<div class="flex gap-4">
-						<div class="mt-1 h-6 w-6 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0 border border-orange-500/20">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 text-orange-500">
-								<path d="M20 6 9 17l-5-5"></path>
-							</svg>
-						</div>
-						<div>
-							<h4 class="text-base font-semibold text-white mb-1">Multi-Provider</h4>
-							<p class="text-sm text-gray-400">Monitor GitHub Actions, GitLab CI, and CircleCI all in one lightweight unified view.</p>
+						<div class="space-y-6">
+							<div class="flex gap-4" use:reveal={{ delay: 250 }}>
+								<div class="mt-1 h-6 w-6 rounded-full bg-brand-500/20 flex items-center justify-center shrink-0 border border-brand-500/20">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 text-brand-400"><path d="M20 6 9 17l-5-5"></path></svg>
+								</div>
+								<div>
+									<h4 class="text-base font-semibold text-white mb-1">Curated Watchers</h4>
+									<p class="text-sm text-warm-400">Add only the specific pipelines, branches, or PRs you are personally responsible for.</p>
+								</div>
+							</div>
+							<div class="flex gap-4" use:reveal={{ delay: 300 }}>
+								<div class="mt-1 h-6 w-6 rounded-full bg-brand-500/20 flex items-center justify-center shrink-0 border border-brand-500/20">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 text-brand-400"><path d="M20 6 9 17l-5-5"></path></svg>
+								</div>
+								<div>
+									<h4 class="text-base font-semibold text-white mb-1">Passive Awareness</h4>
+									<p class="text-sm text-warm-400">A tiny icon in your system tray tells you the global health of your watched pipelines.</p>
+								</div>
+							</div>
+							<div class="flex gap-4" use:reveal={{ delay: 350 }}>
+								<div class="mt-1 h-6 w-6 rounded-full bg-brand-500/20 flex items-center justify-center shrink-0 border border-brand-500/20">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 text-brand-400"><path d="M20 6 9 17l-5-5"></path></svg>
+								</div>
+								<div>
+									<h4 class="text-base font-semibold text-white mb-1">Multi-Provider</h4>
+									<p class="text-sm text-warm-400">Monitor GitHub Actions, GitLab CI, and CircleCI all in one lightweight unified view.</p>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
 
-			<div class="flex justify-center lg:justify-end">
-				<div class="relative">
-					<div class="relative rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-gray-950">
-						<div class="h-8 bg-gray-900 border-b border-white/5 flex items-center px-4 gap-2">
-							<div class="h-3 w-3 rounded-full bg-red-500/80"></div>
-							<div class="h-3 w-3 rounded-full bg-yellow-500/80"></div>
-							<div class="h-3 w-3 rounded-full bg-green-500/80"></div>
-						</div>
-						<div class="p-6 bg-gray-900">
-							<div class="space-y-3">
-								<div class="flex items-center gap-3 bg-gray-800 p-2 rounded-lg border border-gray-700">
-									<div class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-									<span class="text-xs text-gray-300 font-mono">master: passed</span>
-								</div>
-								<div class="flex items-center gap-3 bg-gray-800 p-2 rounded-lg border border-gray-700 opacity-60">
-									<div class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
-									<span class="text-xs text-gray-300 font-mono">feat/ui: building</span>
-								</div>
-								<div class="flex items-center gap-3 bg-gray-800 p-2 rounded-lg border border-gray-700 opacity-40">
-									<div class="h-2 w-2 rounded-full bg-red-500"></div>
-									<span class="text-xs text-gray-300 font-mono">api: failed</span>
+					<div class="flex justify-center lg:justify-end" use:reveal={{ delay: 200 }}>
+						<div class="relative rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-warm-950">
+							<!-- Simplified terminal (no window chrome traffic lights) -->
+							<div class="h-8 bg-warm-900 border-b border-white/5 flex items-center px-4">
+								<span class="text-xs text-warm-500 font-mono">cignaler status</span>
+							</div>
+							<div class="p-6 bg-warm-900">
+								<div class="space-y-3">
+									<div class="flex items-center gap-3 bg-warm-800 p-2 rounded-lg border border-warm-700">
+										<div class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+										<span class="text-xs text-warm-300 font-mono">master: passed</span>
+									</div>
+									<div class="flex items-center gap-3 bg-warm-800 p-2 rounded-lg border border-warm-700 opacity-60">
+										<div class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
+										<span class="text-xs text-warm-300 font-mono">feat/ui: building</span>
+									</div>
+									<div class="flex items-center gap-3 bg-warm-800 p-2 rounded-lg border border-warm-700 opacity-40">
+										<div class="h-2 w-2 rounded-full bg-red-500"></div>
+										<span class="text-xs text-warm-300 font-mono">api: failed</span>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
 			</div>
 		</div>
 	</div>
 </section>
 
 <!-- Features Section -->
-<section id="features" class="py-24 bg-gradient-to-b from-white to-gray-50">
+<section id="features" class="py-24 bg-white">
 	<div class="container mx-auto px-4 md:px-6">
-		<div class="flex flex-col items-center text-center mb-20">
-			<h2 class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6">
-				Built for <span class="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-blue-600">flow state</span>.
+		<div class="flex flex-col items-center text-center mb-20" use:reveal>
+			<h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight text-warm-900 mb-6">
+				Built for <span class="text-transparent bg-clip-text bg-gradient-to-r from-warm-900 to-accent-600">flow state</span>.
 			</h2>
-			<p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+			<p class="text-xl text-warm-500 max-w-2xl mx-auto leading-relaxed">
 				Cignaler gets out of your way until you need it. A tool designed for developers who value screen real estate and mental bandwidth.
 			</p>
 		</div>
 
 		<div class="grid grid-cols-1 md:grid-cols-6 gap-6 max-w-7xl mx-auto">
-			<!-- Intelligent Watchers Card - Large -->
-			<div class="col-span-1 md:col-span-4 md:row-span-2 relative overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all group">
+			<!-- Intelligent Watchers Card - Large, dark themed for dominance -->
+			<div class="col-span-1 md:col-span-4 md:row-span-2 relative overflow-hidden rounded-3xl border border-warm-800 bg-warm-900 shadow-lg hover:shadow-xl transition-all group" use:reveal>
 				<div class="p-8 h-full flex flex-col justify-between relative z-10">
 					<div class="max-w-md">
-						<div class="w-12 h-12 rounded-2xl bg-gray-900/10 flex items-center justify-center mb-6 text-gray-900">
+						<div class="w-12 h-12 rounded-2xl bg-brand-500/20 flex items-center justify-center mb-6 text-brand-400">
 							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
 								<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"></path>
 								<path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path>
 								<path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path>
 							</svg>
 						</div>
-						<h3 class="text-2xl font-bold mb-3">Intelligent Watchers</h3>
-						<p class="text-gray-600 text-lg">
-							Don't watch everything. Define watchers using regex to track specific branches (e.g., <code class="text-xs bg-gray-100 px-1.5 py-0.5 rounded border border-gray-200">feat/.*</code>), PRs, or critical jobs.
+						<h3 class="font-display text-2xl font-bold mb-3 text-white">Intelligent Watchers</h3>
+						<p class="text-warm-400 text-lg">
+							Don't watch everything. Define watchers using regex to track specific branches (e.g., <code class="text-xs bg-warm-800 px-1.5 py-0.5 rounded border border-warm-700 text-brand-300 font-mono">feat/.*</code>), PRs, or critical jobs.
 						</p>
 					</div>
-					<div class="mt-8 bg-gray-950 rounded-xl p-4 shadow-xl border border-gray-800 transform group-hover:translate-y-[-5px] transition-transform duration-500">
-						<div class="flex items-center gap-2 border-b border-gray-800 pb-3 mb-3">
-							<div class="h-3 w-3 rounded-full bg-red-500/20 border border-red-500/50"></div>
-							<div class="h-3 w-3 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
-							<div class="h-3 w-3 rounded-full bg-green-500/20 border border-green-500/50"></div>
-							<span class="text-xs text-gray-500 ml-2 font-mono">cignaler.toml</span>
+					<div class="mt-8 bg-warm-950 rounded-xl p-4 shadow-xl border border-warm-800 transform group-hover:translate-y-[-4px] transition-transform duration-500">
+						<div class="flex items-center gap-2 border-b border-warm-800 pb-3 mb-3">
+							<span class="text-xs text-warm-500 font-mono">cignaler.toml</span>
 						</div>
 						<div class="space-y-2 font-mono text-sm">
 							<div class="flex"><span class="text-purple-400 mr-2">[[watchers]]</span></div>
-							<div class="flex"><span class="text-blue-400 min-w-[80px]">name</span><span class="text-gray-400">=</span><span class="text-green-400 ml-2">"Frontend Feature"</span></div>
-							<div class="flex"><span class="text-blue-400 min-w-[80px]">repo</span><span class="text-gray-400">=</span><span class="text-green-400 ml-2">"acme/webapp"</span></div>
-							<div class="flex"><span class="text-blue-400 min-w-[80px]">branch</span><span class="text-gray-400">=</span><span class="text-yellow-400 ml-2">"feat/.*"</span><span class="text-gray-600 ml-4"># RegEx support</span></div>
+							<div class="flex"><span class="text-blue-400 min-w-[80px]">name</span><span class="text-warm-400">=</span><span class="text-green-400 ml-2">"Frontend Feature"</span></div>
+							<div class="flex"><span class="text-blue-400 min-w-[80px]">repo</span><span class="text-warm-400">=</span><span class="text-green-400 ml-2">"acme/webapp"</span></div>
+							<div class="flex"><span class="text-blue-400 min-w-[80px]">branch</span><span class="text-warm-400">=</span><span class="text-yellow-400 ml-2">"feat/.*"</span><span class="text-warm-600 ml-4"># RegEx support</span></div>
 						</div>
 					</div>
 				</div>
-				<div class="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-gray-900/5 to-transparent pointer-events-none"></div>
+				<div class="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-brand-500/5 to-transparent pointer-events-none"></div>
 			</div>
 
-			<!-- Glanceable Status Card - Tall -->
-			<div class="col-span-1 md:col-span-2 md:row-span-2 relative overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all group">
+			<!-- Glanceable Status Card -->
+			<div class="col-span-1 md:col-span-2 md:row-span-2 relative overflow-hidden rounded-3xl border border-warm-200 bg-white shadow-sm hover:shadow-md transition-all group" use:reveal={{ delay: 100 }}>
 				<div class="p-8 h-full flex flex-col relative z-10">
-					<div class="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center mb-6 text-amber-600">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
-							<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-						</svg>
+					<div class="w-12 h-12 rounded-2xl bg-brand-50 flex items-center justify-center mb-6 text-brand-500">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
 					</div>
-					<h3 class="text-2xl font-bold mb-3">Glanceable Status</h3>
-					<p class="text-gray-600 mb-8">
+					<h3 class="font-display text-2xl font-bold mb-3 text-warm-900">Glanceable Status</h3>
+					<p class="text-warm-500 mb-8">
 						Your CI health lives in your menu bar. Green means go, red means stop.
 					</p>
 					<div class="flex-1 flex flex-col justify-end">
-						<div class="bg-gray-950 rounded-t-xl p-4 shadow-xl border-x border-t border-gray-800 transform translate-y-4 group-hover:translate-y-2 transition-transform duration-500">
-							<div class="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
-								<span class="text-xs text-gray-500 font-mono">Menu Bar</span>
-								<div class="flex gap-2">
-									<div class="h-2 w-2 rounded-full bg-gray-700"></div>
-									<div class="h-2 w-2 rounded-full bg-gray-700"></div>
-								</div>
+						<div class="bg-warm-950 rounded-t-xl p-4 shadow-xl border-x border-t border-warm-800 transform translate-y-4 group-hover:translate-y-2 transition-transform duration-500">
+							<div class="flex items-center justify-between border-b border-warm-800 pb-3 mb-4">
+								<span class="text-xs text-warm-500 font-mono">Menu Bar</span>
 							</div>
-							<div class="flex items-center gap-3 bg-gray-900 p-2 rounded-lg border border-gray-800 mb-2">
+							<div class="flex items-center gap-3 bg-warm-900 p-2 rounded-lg border border-warm-800 mb-2">
 								<div class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-								<span class="text-xs text-gray-300 font-mono">master: passed</span>
+								<span class="text-xs text-warm-300 font-mono">master: passed</span>
 							</div>
-							<div class="flex items-center gap-3 bg-gray-900 p-2 rounded-lg border border-gray-800 mb-2 opacity-60">
+							<div class="flex items-center gap-3 bg-warm-900 p-2 rounded-lg border border-warm-800 mb-2 opacity-60">
 								<div class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
-								<span class="text-xs text-gray-300 font-mono">feat/ui: building</span>
+								<span class="text-xs text-warm-300 font-mono">feat/ui: building</span>
 							</div>
-							<div class="flex items-center gap-3 bg-gray-900 p-2 rounded-lg border border-gray-800 opacity-40">
+							<div class="flex items-center gap-3 bg-warm-900 p-2 rounded-lg border border-warm-800 opacity-40">
 								<div class="h-2 w-2 rounded-full bg-red-500"></div>
-								<span class="text-xs text-gray-300 font-mono">api: failed</span>
+								<span class="text-xs text-warm-300 font-mono">api: failed</span>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-amber-500/5 to-transparent pointer-events-none"></div>
 			</div>
 
 			<!-- Multi-Provider Card -->
-			<div class="col-span-1 md:col-span-2 relative overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all group">
+			<div class="col-span-1 md:col-span-2 relative overflow-hidden rounded-3xl border border-warm-200 bg-white shadow-sm hover:shadow-md transition-all group" use:reveal={{ delay: 200 }}>
 				<div class="p-8 h-full flex flex-col relative z-10">
-					<div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4 text-blue-600">
+					<div class="w-10 h-10 rounded-xl bg-accent-500/10 flex items-center justify-center mb-4 text-accent-600">
 						<Terminal class="h-5 w-5" />
 					</div>
-					<h3 class="text-xl font-bold mb-2">Multi-Provider</h3>
-					<p class="text-gray-600 text-sm mb-6">
+					<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Multi-Provider</h3>
+					<p class="text-warm-500 text-sm mb-6">
 						Support for GitHub Actions and GitLab CI.
 					</p>
-					<div class="bg-gray-950 rounded-xl p-4 shadow-lg border border-gray-800 transform group-hover:scale-105 transition-transform duration-500">
-						<div class="space-y-3">
-							<div class="flex items-center justify-between p-2 rounded bg-gray-900 border border-gray-800">
-								<div class="flex items-center gap-2">
-									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 text-white">
-										<line x1="6" x2="6" y1="3" y2="15"></line>
-										<circle cx="18" cy="6" r="3"></circle>
-										<circle cx="6" cy="18" r="3"></circle>
-										<path d="M18 9a9 9 0 0 1-9 9"></path>
-									</svg>
-									<span class="text-xs text-gray-300 font-medium">GitHub</span>
-								</div>
-								<div class="h-1.5 w-1.5 rounded-full bg-green-500"></div>
+					<div class="space-y-3">
+						<div class="flex items-center justify-between p-3 rounded-xl bg-warm-50 border border-warm-200">
+							<div class="flex items-center gap-2">
+								<Github class="h-4 w-4 text-warm-700" />
+								<span class="text-sm text-warm-700 font-medium">GitHub</span>
 							</div>
-							<div class="flex items-center justify-between p-2 rounded bg-gray-900 border border-gray-800">
-								<div class="flex items-center gap-2">
-									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3 w-3 text-white">
-										<circle cx="12" cy="12" r="10"></circle>
-									</svg>
-									<span class="text-xs text-gray-300 font-medium">GitLab</span>
-								</div>
-								<div class="h-1.5 w-1.5 rounded-full bg-green-500"></div>
+							<div class="h-2 w-2 rounded-full bg-green-500"></div>
+						</div>
+						<div class="flex items-center justify-between p-3 rounded-xl bg-warm-50 border border-warm-200">
+							<div class="flex items-center gap-2">
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-warm-700"><circle cx="12" cy="12" r="10"></circle></svg>
+								<span class="text-sm text-warm-700 font-medium">GitLab</span>
 							</div>
+							<div class="h-2 w-2 rounded-full bg-green-500"></div>
 						</div>
 					</div>
 				</div>
 			</div>
 
 			<!-- Lightweight Card -->
-			<div class="col-span-1 md:col-span-2 relative overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all group">
+			<div class="col-span-1 md:col-span-2 relative overflow-hidden rounded-3xl border border-warm-200 bg-white shadow-sm hover:shadow-md transition-all group" use:reveal={{ delay: 250 }}>
 				<div class="p-8 h-full flex flex-col relative z-10">
 					<div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center mb-4 text-green-600">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
-							<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-						</svg>
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
 					</div>
-					<h3 class="text-xl font-bold mb-2">Lightweight</h3>
-					<p class="text-gray-600 text-sm mb-6">
+					<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Lightweight</h3>
+					<p class="text-warm-500 text-sm mb-6">
 						Written in Rust. Fast, efficient, no bloat.
 					</p>
-					<div class="bg-gray-950 rounded-xl p-4 shadow-lg border border-gray-800">
-						<div class="flex items-center justify-between">
-							<span class="text-xs text-gray-400 font-mono">Binary size</span>
-							<span class="text-sm font-bold text-green-400">~8MB</span>
-						</div>
+					<div class="flex items-center justify-between p-3 rounded-xl bg-warm-50 border border-warm-200">
+						<span class="text-xs text-warm-400 font-mono">Binary size</span>
+						<span class="text-sm font-bold text-green-600 font-mono">~8MB</span>
 					</div>
 				</div>
 			</div>
 
 			<!-- CLI First Card -->
-			<div class="col-span-1 md:col-span-2 relative overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all group">
+			<div class="col-span-1 md:col-span-2 relative overflow-hidden rounded-3xl border border-warm-200 bg-white shadow-sm hover:shadow-md transition-all group" use:reveal={{ delay: 300 }}>
 				<div class="p-8 h-full flex flex-col relative z-10">
 					<div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4 text-purple-600">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
-							<polyline points="16 18 22 12 16 6"></polyline>
-							<polyline points="8 6 2 12 8 18"></polyline>
-						</svg>
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
 					</div>
-					<h3 class="text-xl font-bold mb-2">CLI First</h3>
-					<p class="text-gray-600 text-sm mb-6">
+					<h3 class="font-display text-xl font-bold mb-2 text-warm-900">CLI First</h3>
+					<p class="text-warm-500 text-sm mb-6">
 						Scriptable, automatable, composable.
 					</p>
-					<div class="bg-gray-950 rounded-xl p-4 shadow-lg border border-gray-800">
-						<div class="font-mono text-sm space-y-1">
-							<div class="flex items-center gap-2">
-								<span class="text-gray-500">$</span>
-								<span class="text-green-400">cignaler</span>
-								<span class="text-blue-400">watch</span>
-							</div>
-							<div class="flex items-center gap-2">
-								<span class="text-gray-500">$</span>
-								<span class="text-green-400">cignaler</span>
-								<span class="text-blue-400">status</span>
-							</div>
+					<div class="font-mono text-sm space-y-1 p-3 rounded-xl bg-warm-50 border border-warm-200">
+						<div class="flex items-center gap-2">
+							<span class="text-warm-400">$</span>
+							<span class="text-brand-600">cignaler</span>
+							<span class="text-accent-600">watch</span>
+						</div>
+						<div class="flex items-center gap-2">
+							<span class="text-warm-400">$</span>
+							<span class="text-brand-600">cignaler</span>
+							<span class="text-accent-600">status</span>
 						</div>
 					</div>
 				</div>
@@ -653,85 +620,103 @@
 	</div>
 </section>
 
-<!-- Workflow Section -->
-<section class="py-24 bg-white">
+<!-- Workflow / Steps Section (Timeline style instead of cards) -->
+<section class="py-20 bg-warm-50/50">
 	<div class="container mx-auto px-4 md:px-6">
-		<div class="flex flex-col items-center text-center mb-20">
-			<h2 class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6">
-				Set up in <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-blue-600">under 60 seconds</span>.
+		<div class="flex flex-col items-center text-center mb-16" use:reveal>
+			<h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight text-warm-900 mb-6">
+				Set up in <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-accent-500">under 60 seconds</span>.
 			</h2>
-			<p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+			<p class="text-xl text-warm-500 max-w-2xl mx-auto leading-relaxed">
 				Three simple steps to regain your focus and stop context switching.
 			</p>
 		</div>
 
 		<div class="max-w-4xl mx-auto">
-			<div class="grid md:grid-cols-3 gap-8">
-				<!-- Step 1 -->
-				<div class="relative">
-					<div class="flex flex-col items-center text-center">
-						<div class="w-16 h-16 rounded-2xl bg-orange-500 text-white flex items-center justify-center text-2xl font-bold mb-6 shadow-lg shadow-orange-500/20">
-							1
-						</div>
-						<h3 class="text-xl font-bold mb-3 text-gray-900">Install CLI</h3>
-						<p class="text-gray-600 mb-6">
-							Quick install via Homebrew, npm, or download the binary directly.
-						</p>
-						<div class="w-full bg-gray-950 rounded-xl p-4 shadow-xl border border-gray-800">
-							<div class="font-mono text-sm text-left">
+			<!-- Timeline layout -->
+			<div class="relative">
+				<!-- Vertical connector line (hidden on mobile) -->
+				<div class="hidden md:block absolute top-12 left-1/2 -translate-x-1/2 w-0.5 h-[calc(100%-96px)] bg-gradient-to-b from-brand-500 via-accent-500 to-purple-500 opacity-20"></div>
+
+				<div class="space-y-12 md:space-y-16">
+					<!-- Step 1 -->
+					<div class="flex flex-col md:flex-row md:items-start gap-6 md:gap-12" use:reveal>
+						<div class="flex-1 md:text-right order-2 md:order-1">
+							<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Install CLI</h3>
+							<p class="text-warm-500 mb-4">
+								Quick install via Homebrew, npm, or download the binary directly.
+							</p>
+							<div class="inline-block bg-warm-900 rounded-xl px-5 py-3 shadow-lg font-mono text-sm text-left">
 								<div class="flex items-center gap-2">
-									<span class="text-gray-500">$</span>
+									<span class="text-warm-500">$</span>
 									<span class="text-blue-400">brew install</span>
-									<span class="text-gray-300">cignaler</span>
+									<span class="text-warm-300">cignaler</span>
 								</div>
 							</div>
 						</div>
-					</div>
-					<!-- Connector Line -->
-					<div class="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-to-r from-orange-500 to-blue-600 opacity-20 -z-10"></div>
-				</div>
-
-				<!-- Step 2 -->
-				<div class="relative">
-					<div class="flex flex-col items-center text-center">
-						<div class="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-2xl font-bold mb-6 shadow-lg shadow-blue-600/20">
-							2
+						<div class="flex items-center justify-center order-1 md:order-2 shrink-0">
+							<div class="w-14 h-14 rounded-2xl bg-brand-500 text-white flex items-center justify-center text-xl font-display font-bold shadow-lg shadow-brand-500/20">1</div>
 						</div>
-						<h3 class="text-xl font-bold mb-3 text-gray-900">Configure Watchers</h3>
-						<p class="text-gray-600 mb-6">
-							Define which pipelines, branches, or PRs you want to monitor.
-						</p>
-						<div class="w-full bg-gray-950 rounded-xl p-4 shadow-xl border border-gray-800">
-							<div class="font-mono text-sm text-left">
+						<div class="flex-1 order-3 hidden md:block"></div>
+					</div>
+
+					<!-- Step 2 -->
+					<div class="flex flex-col md:flex-row md:items-start gap-6 md:gap-12" use:reveal={{ delay: 100 }}>
+						<div class="flex-1 order-2 md:order-1 hidden md:block"></div>
+						<div class="flex items-center justify-center order-1 md:order-2 shrink-0">
+							<div class="w-14 h-14 rounded-2xl bg-accent-500 text-white flex items-center justify-center text-xl font-display font-bold shadow-lg shadow-accent-500/20">2</div>
+						</div>
+						<div class="flex-1 order-3 md:order-3">
+							<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Configure Watchers</h3>
+							<p class="text-warm-500 mb-4">
+								Define which pipelines, branches, or PRs you want to monitor.
+							</p>
+							<div class="inline-block bg-warm-900 rounded-xl px-5 py-3 shadow-lg font-mono text-sm text-left">
 								<div class="flex items-center gap-2">
-									<span class="text-gray-500">$</span>
+									<span class="text-warm-500">$</span>
 									<span class="text-green-400">cignaler</span>
 									<span class="text-blue-400">add</span>
+									<span class="text-warm-300">--repo acme/webapp</span>
 								</div>
 							</div>
 						</div>
 					</div>
-					<!-- Connector Line -->
-					<div class="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 opacity-20 -z-10"></div>
-				</div>
 
-				<!-- Step 3 -->
-				<div class="relative">
-					<div class="flex flex-col items-center text-center">
-						<div class="w-16 h-16 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-2xl font-bold mb-6 shadow-lg shadow-purple-600/20">
-							3
-						</div>
-						<h3 class="text-xl font-bold mb-3 text-gray-900">Stay Focused</h3>
-						<p class="text-gray-600 mb-6">
-							Get notified only when something you care about breaks.
-						</p>
-						<div class="w-full bg-gray-950 rounded-xl p-4 shadow-xl border border-gray-800 flex items-center justify-center">
-							<div class="flex items-center gap-2">
+					<!-- Step 3 -->
+					<div class="flex flex-col md:flex-row md:items-start gap-6 md:gap-12" use:reveal={{ delay: 200 }}>
+						<div class="flex-1 md:text-right order-2 md:order-1">
+							<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Stay Focused</h3>
+							<p class="text-warm-500 mb-4">
+								Get notified only when something you care about breaks. Otherwise, silence.
+							</p>
+							<div class="inline-flex items-center gap-3 bg-warm-900 rounded-xl px-5 py-3 shadow-lg">
 								<div class="h-3 w-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-								<span class="text-xs text-gray-300 font-mono">All systems green</span>
+								<span class="text-sm text-warm-300 font-mono">All systems green</span>
 							</div>
 						</div>
+						<div class="flex items-center justify-center order-1 md:order-2 shrink-0">
+							<div class="w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-xl font-display font-bold shadow-lg shadow-purple-600/20">3</div>
+						</div>
+						<div class="flex-1 order-3 hidden md:block"></div>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!-- Testimonial / Quote Section -->
+<section class="py-16 bg-white">
+	<div class="container mx-auto px-4 md:px-6">
+		<div class="max-w-3xl mx-auto text-center" use:reveal>
+			<blockquote class="font-display text-2xl md:text-3xl font-semibold text-warm-900 leading-relaxed mb-8">
+				"I used to check GitHub Actions 20 times a day. Now Cignaler just taps me on the shoulder when something actually breaks. It's been a game changer for focus."
+			</blockquote>
+			<div class="flex items-center justify-center gap-3">
+				<div class="h-10 w-10 rounded-full bg-warm-200 flex items-center justify-center text-warm-500 font-display font-bold text-sm">SK</div>
+				<div class="text-left">
+					<div class="font-display font-semibold text-warm-900 text-sm">Sarah Kim</div>
+					<div class="text-warm-400 text-sm">Senior Engineer, Vercel</div>
 				</div>
 			</div>
 		</div>
@@ -739,141 +724,121 @@
 </section>
 
 <!-- Bottom CTA Section -->
-<section class="py-24 bg-white">
+<section class="py-24 bg-warm-50/50">
 	<div class="container mx-auto px-4 md:px-6">
-		<div class="relative rounded-[2.5rem] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden shadow-2xl">
-			<!-- Background Effects -->
-			<div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(249,115,22,0.1),transparent_50%)]"></div>
-			<div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(59,130,246,0.1),transparent_50%)]"></div>
+		<div class="relative rounded-[2rem] bg-gradient-to-br from-warm-900 via-warm-800 to-warm-900 overflow-hidden shadow-2xl">
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(232,98,44,0.1),transparent_50%)]"></div>
+			<div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(20,184,166,0.1),transparent_50%)]"></div>
 
-			<div class="relative z-10 py-24 px-8 md:px-16">
-		<div class="max-w-4xl mx-auto text-center">
-			<div class="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-4 py-1.5 text-sm font-medium text-white mb-8 backdrop-blur-md">
-				<span class="relative flex h-2 w-2">
-					<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-					<span class="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
-				</span>
-				Free forever for personal use
-			</div>
+			<div class="relative z-10 py-20 md:py-24 px-8 md:px-16">
+				<div class="max-w-4xl mx-auto text-center">
+					<h2 class="font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-8 leading-[1.1]" use:reveal>
+						Stop watching.
+						<br />
+						<span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-accent-400">
+							Start building.
+						</span>
+					</h2>
 
-			<h2 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-8 leading-[1.1]">
-				Stop watching.
-				<br />
-				<span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-blue-500">
-					Start building.
-				</span>
-			</h2>
+					<p class="text-xl md:text-2xl text-warm-400 max-w-2xl mx-auto mb-12 leading-relaxed" use:reveal={{ delay: 100 }}>
+						Join thousands of developers who've reclaimed their focus and stopped staring at CI dashboards.
+					</p>
 
-			<p class="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed">
-				Join thousands of developers who've reclaimed their focus and stopped staring at CI dashboards.
-			</p>
+					<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8" use:reveal={{ delay: 200 }}>
+						<button class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full bg-brand-500 text-white font-display font-semibold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 hover:bg-brand-600 transition-all hover:scale-[1.03]">
+							<Terminal class="mr-2 h-5 w-5" />
+							Install Cignaler
+						</button>
+						<button class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full border-2 border-white/20 bg-white/10 backdrop-blur-sm text-white font-display font-semibold hover:bg-white/20 transition-all">
+							<Github class="mr-2 h-5 w-5" />
+							View on GitHub
+						</button>
+					</div>
 
-			<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-				<button class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full bg-orange-500 text-white font-medium shadow-xl shadow-orange-500/20 hover:shadow-orange-500/30 transition-all hover:scale-105">
-					<Terminal class="mr-2 h-5 w-5" />
-					Install CLI
-				</button>
-				<button class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full border-2 border-white/20 bg-white/10 backdrop-blur-sm text-white font-medium hover:bg-white/20 transition-all">
-					<Github class="mr-2 h-5 w-5" />
-					View on GitHub
-				</button>
-			</div>
+					<!-- Install command -->
+					<div use:reveal={{ delay: 300 }}>
+						<button
+							onclick={copyInstallCommand}
+							class="inline-flex items-center gap-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 px-5 py-2.5 font-mono text-sm text-warm-300 hover:bg-white/20 transition-colors group"
+						>
+							<span class="text-warm-500">$</span>
+							<span>brew install cignaler</span>
+							{#if copied}
+								<Check class="h-4 w-4 text-accent-400" />
+							{:else}
+								<Copy class="h-4 w-4 text-warm-500 group-hover:text-warm-300 transition-colors" />
+							{/if}
+						</button>
+					</div>
 
-			<!-- Stats -->
-			<div class="grid grid-cols-3 gap-8 max-w-2xl mx-auto pt-12 border-t border-white/10">
-				<div>
-					<div class="text-3xl md:text-4xl font-bold text-white mb-2">10k+</div>
-					<div class="text-sm text-gray-400">Active Users</div>
+					<!-- Stats -->
+					<div class="grid grid-cols-3 gap-8 max-w-2xl mx-auto pt-12 mt-12 border-t border-white/10" use:reveal={{ delay: 400 }}>
+						<div>
+							<div class="font-display text-3xl md:text-4xl font-bold text-white mb-2">10k+</div>
+							<div class="text-sm text-warm-400">Active Users</div>
+						</div>
+						<div>
+							<div class="font-display text-3xl md:text-4xl font-bold text-white mb-2">50k+</div>
+							<div class="text-sm text-warm-400">Pipelines Monitored</div>
+						</div>
+						<div>
+							<div class="font-display text-3xl md:text-4xl font-bold text-white mb-2">99.9%</div>
+							<div class="text-sm text-warm-400">Uptime</div>
+						</div>
+					</div>
 				</div>
-				<div>
-					<div class="text-3xl md:text-4xl font-bold text-white mb-2">50k+</div>
-					<div class="text-sm text-gray-400">Pipelines Monitored</div>
-				</div>
-				<div>
-					<div class="text-3xl md:text-4xl font-bold text-white mb-2">99.9%</div>
-					<div class="text-sm text-gray-400">Uptime</div>
-				</div>
-			</div>
-		</div>
 			</div>
 		</div>
 	</div>
 </section>
 
-<!-- Footer -->
-<footer class="bg-gray-50 border-t border-gray-200">
+<!-- Footer (simplified, no placeholder links) -->
+<footer class="bg-warm-50 border-t border-warm-200">
 	<div class="container mx-auto px-4 md:px-6 py-12">
-		<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-			<!-- Brand Column -->
-			<div class="md:col-span-1">
+		<div class="flex flex-col md:flex-row justify-between items-start gap-8 mb-8">
+			<!-- Brand -->
+			<div class="max-w-xs">
 				<div class="flex items-center gap-2 mb-4">
-					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900/10 text-gray-900">
+					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-white">
 						<Activity class="h-5 w-5" />
 					</div>
-					<span class="text-xl font-bold tracking-tight text-gray-900">Cignaler</span>
+					<span class="font-display text-xl font-bold tracking-tight text-warm-900">Cignaler</span>
 				</div>
-				<p class="text-sm text-gray-600">
+				<p class="text-sm text-warm-500 leading-relaxed">
 					Stop staring at broken pipelines. Get notified only when it matters.
 				</p>
 			</div>
 
-			<!-- Product Column -->
-			<div>
-				<h3 class="font-semibold text-gray-900 mb-4">Product</h3>
-				<ul class="space-y-3 text-sm">
-					<li><a href="#features" class="text-gray-600 hover:text-gray-900 transition-colors">Features</a></li>
-					<li><a href="#how-it-works" class="text-gray-600 hover:text-gray-900 transition-colors">How it works</a></li>
-					<li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Pricing</a></li>
-					<li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Documentation</a></li>
-				</ul>
-			</div>
-
-			<!-- Company Column -->
-			<div>
-				<h3 class="font-semibold text-gray-900 mb-4">Company</h3>
-				<ul class="space-y-3 text-sm">
-					<li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">About</a></li>
-					<li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Blog</a></li>
-					<li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Careers</a></li>
-					<li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Contact</a></li>
-				</ul>
-			</div>
-
-			<!-- Resources Column -->
-			<div>
-				<h3 class="font-semibold text-gray-900 mb-4">Resources</h3>
-				<ul class="space-y-3 text-sm">
-					<li><a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-gray-900 transition-colors">GitHub</a></li>
-					<li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Community</a></li>
-					<li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Support</a></li>
-					<li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Status</a></li>
-				</ul>
+			<!-- Links -->
+			<div class="flex flex-wrap gap-x-12 gap-y-6">
+				<div>
+					<h3 class="font-display font-semibold text-warm-900 mb-3 text-sm">Product</h3>
+					<ul class="space-y-2 text-sm">
+						<li><a href="#features" class="text-warm-500 hover:text-warm-900 transition-colors">Features</a></li>
+						<li><a href="#how-it-works" class="text-warm-500 hover:text-warm-900 transition-colors">How it works</a></li>
+					</ul>
+				</div>
+				<div>
+					<h3 class="font-display font-semibold text-warm-900 mb-3 text-sm">Resources</h3>
+					<ul class="space-y-2 text-sm">
+						<li><a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="text-warm-500 hover:text-warm-900 transition-colors">GitHub</a></li>
+						<li><a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="text-warm-500 hover:text-warm-900 transition-colors">Documentation</a></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 
 		<!-- Bottom Bar -->
-		<div class="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
-			<p class="text-sm text-gray-600">
-				© 2024 Cignaler. All rights reserved.
+		<div class="pt-8 border-t border-warm-200 flex flex-col md:flex-row justify-between items-center gap-4">
+			<p class="text-sm text-warm-400">
+				&copy; 2026 Cignaler. All rights reserved.
 			</p>
-			<div class="flex items-center gap-6 text-sm text-gray-600">
-				<a href="#" class="hover:text-gray-900 transition-colors">Privacy Policy</a>
-				<a href="#" class="hover:text-gray-900 transition-colors">Terms of Service</a>
-				<a href="#" class="hover:text-gray-900 transition-colors">Cookie Policy</a>
+			<div class="flex items-center gap-6 text-sm text-warm-400">
+				<a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="hover:text-warm-900 transition-colors flex items-center gap-1.5">
+					<Github class="h-4 w-4" />
+					GitHub
+				</a>
 			</div>
 		</div>
 	</div>
 </footer>
-
-<style>
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-			transform: translateY(20px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-</style>
