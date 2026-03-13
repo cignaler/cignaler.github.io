@@ -34,6 +34,75 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Cignaler — Desktop CI Pipeline Monitor for GitLab</title>
+	{@html `<script type="application/ld+json">${JSON.stringify({
+		"@context": "https://schema.org",
+		"@graph": [
+			{
+				"@type": "SoftwareApplication",
+				"name": "Cignaler",
+				"description": "Cignaler is a free, open-source desktop application that monitors GitLab CI/CD pipelines from your system tray. Built with Tauri 2 and Rust, it polls your pipelines and sends native notifications when builds fail.",
+				"applicationCategory": "DeveloperApplication",
+				"operatingSystem": "macOS",
+				"offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+				"downloadUrl": "https://github.com/cignaler/cignaler/releases/latest/download/Cignaler.dmg",
+				"url": "https://cignaler.github.io",
+				"softwareVersion": "0.0.1",
+				"author": { "@type": "Organization", "name": "Cignaler", "url": "https://cignaler.github.io" }
+			},
+			{
+				"@type": "Organization",
+				"name": "Cignaler",
+				"url": "https://cignaler.github.io",
+				"logo": "https://cignaler.github.io/cignaler_icon.png",
+				"sameAs": ["https://github.com/cignaler/cignaler"]
+			},
+			{
+				"@type": "WebPage",
+				"name": "Cignaler — Desktop CI Pipeline Monitor for GitLab",
+				"description": "Cignaler is a free, open-source desktop application that monitors GitLab CI/CD pipelines from your system tray.",
+				"url": "https://cignaler.github.io"
+			},
+			{
+				"@type": "FAQPage",
+				"mainEntity": [
+					{
+						"@type": "Question",
+						"name": "What is Cignaler?",
+						"acceptedAnswer": { "@type": "Answer", "text": "Cignaler is a free, open-source desktop application that monitors GitLab CI/CD pipelines from your system tray. Built with Tauri 2 and Rust, it polls your pipelines every 60 seconds and sends native notifications when builds fail — so you never have to keep a CI dashboard tab open." }
+					},
+					{
+						"@type": "Question",
+						"name": "What CI platforms does Cignaler support?",
+						"acceptedAnswer": { "@type": "Answer", "text": "Cignaler currently supports GitLab CI/CD. Support for GitHub Actions and Jenkins is planned." }
+					},
+					{
+						"@type": "Question",
+						"name": "Is Cignaler free?",
+						"acceptedAnswer": { "@type": "Answer", "text": "Yes, Cignaler is completely free and open source." }
+					},
+					{
+						"@type": "Question",
+						"name": "What platforms does Cignaler run on?",
+						"acceptedAnswer": { "@type": "Answer", "text": "Cignaler is currently available for macOS. Windows and Linux support is coming soon." }
+					},
+					{
+						"@type": "Question",
+						"name": "How does Cignaler work?",
+						"acceptedAnswer": { "@type": "Answer", "text": "Cignaler runs as a system tray application. You create watchers for specific GitLab projects and branches. It polls your pipelines every 60 seconds and sends native desktop notifications when a build fails. Results are cached locally in SQLite." }
+					},
+					{
+						"@type": "Question",
+						"name": "Does Cignaler collect any data?",
+						"acceptedAnswer": { "@type": "Answer", "text": "No. Cignaler is fully local — all data stays on your machine. There is no telemetry, analytics, or external data collection of any kind." }
+					}
+				]
+			}
+		]
+	})}</script>`}
+</svelte:head>
+
 <!-- Navigation Header -->
 <header class="sticky top-0 z-50 w-full border-b border-warm-200/60 bg-white/80 backdrop-blur-md">
 	<div class="container mx-auto px-4 md:px-6">
@@ -48,14 +117,14 @@
 			<nav class="hidden md:flex items-center gap-8 text-sm font-medium text-warm-500">
 				<a href="#features" class="transition-colors hover:text-warm-900">Features</a>
 				<a href="#how-it-works" class="transition-colors hover:text-warm-900">How it works</a>
-				<a href="https://github.com/ostwi/cignaler" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-warm-900">GitHub</a>
+				<a href="https://github.com/cignaler/cignaler" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-warm-900">GitHub</a>
 			</nav>
 
 			<!-- CTA + Mobile Toggle -->
 			<div class="flex items-center gap-3">
-				<button class="hidden sm:flex items-center justify-center whitespace-nowrap rounded-lg font-display font-semibold transition-colors h-9 px-4 text-sm bg-warm-900 text-white hover:bg-warm-800 shadow-sm">
+				<a href="https://github.com/cignaler/cignaler/releases/latest/download/Cignaler.dmg" class="hidden sm:flex items-center justify-center whitespace-nowrap rounded-lg font-display font-semibold transition-colors h-9 px-4 text-sm bg-warm-900 text-white hover:bg-warm-800 shadow-sm">
 					Download Cignaler
-				</button>
+				</a>
 				<button
 					class="flex md:hidden items-center justify-center h-9 w-9 rounded-lg text-warm-600 hover:bg-warm-100 transition-colors"
 					onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
@@ -75,16 +144,18 @@
 			<nav class="md:hidden border-t border-warm-200/60 py-4 space-y-1">
 				<a href="#features" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors" onclick={() => (mobileMenuOpen = false)}>Features</a>
 				<a href="#how-it-works" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors" onclick={() => (mobileMenuOpen = false)}>How it works</a>
-				<a href="https://github.com/ostwi/cignaler" target="_blank" rel="noopener noreferrer" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors">GitHub</a>
+				<a href="https://github.com/cignaler/cignaler" target="_blank" rel="noopener noreferrer" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors">GitHub</a>
 				<div class="pt-2">
-					<button class="w-full flex items-center justify-center rounded-lg font-display font-semibold h-10 text-sm bg-warm-900 text-white hover:bg-warm-800">
+					<a href="https://github.com/cignaler/cignaler/releases/latest/download/Cignaler.dmg" class="w-full flex items-center justify-center rounded-lg font-display font-semibold h-10 text-sm bg-warm-900 text-white hover:bg-warm-800">
 						Download Cignaler
-					</button>
+					</a>
 				</div>
 			</nav>
 		{/if}
 	</div>
 </header>
+
+<main>
 
 <!-- Hero Section -->
 <section class="relative overflow-hidden bg-white pt-24 md:pt-32 pb-32 md:pb-40 selection:bg-brand-500/20">
@@ -140,14 +211,15 @@
 
 			<!-- CTAs -->
 			<div class="flex flex-col sm:flex-row items-center gap-4" use:reveal={{ delay: 300 }}>
-				<button
+				<a
+					href="https://github.com/cignaler/cignaler/releases/latest/download/Cignaler.dmg"
 					class="h-14 px-8 text-lg rounded-full bg-brand-500 text-white font-display font-semibold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 hover:bg-brand-600 transition-all hover:scale-[1.03] flex items-center gap-2"
 				>
 					<Download class="h-5 w-5" />
 					Download Cignaler
-				</button>
+				</a>
 				<a
-					href="https://github.com/ostwi/cignaler"
+					href="https://github.com/cignaler/cignaler"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="h-14 px-8 text-lg rounded-full border-2 border-warm-300 bg-white text-warm-900 font-display font-semibold hover:bg-warm-50 transition-all flex items-center gap-2"
@@ -159,8 +231,13 @@
 
 			<!-- Platform availability -->
 			<div class="mt-6" use:reveal={{ delay: 400 }}>
-				<p class="text-sm text-warm-400">Available for macOS, Windows & Linux</p>
+				<p class="text-sm text-warm-400">Available for macOS · Windows & Linux coming soon</p>
 			</div>
+
+			<!-- What is Cignaler (GEO: factual entity description for AI search engines) -->
+			<p class="mt-8 text-sm text-warm-500 max-w-2xl mx-auto leading-relaxed" use:reveal={{ delay: 500 }}>
+				Cignaler is a free, open-source desktop application that monitors GitLab CI/CD pipelines from your system tray. Built with Tauri 2 and Rust, it polls your pipelines and sends native notifications when builds fail — so you never have to keep a CI dashboard tab open. Unlike browser-based CI dashboards, Cignaler runs natively on your desktop with minimal resource usage.
+			</p>
 		</div>
 
 		<!-- Product Screenshot -->
@@ -728,7 +805,7 @@
 						<div class="flex-1 md:text-right order-2 md:order-1">
 							<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Download the App</h3>
 							<p class="text-warm-500 mb-4">
-								Download Cignaler for your platform. A lightweight desktop app that lives in your system tray.
+								Download Cignaler for macOS. A lightweight desktop app that lives in your system tray. Windows & Linux coming soon.
 							</p>
 							<div class="inline-flex items-center gap-2 bg-brand-500 rounded-xl px-5 py-3 shadow-lg text-sm text-white font-semibold">
 								<Download class="h-4 w-4" />
@@ -821,14 +898,14 @@
 					</p>
 
 					<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8" use:reveal={{ delay: 200 }}>
-						<button class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full bg-brand-500 text-white font-display font-semibold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 hover:bg-brand-600 transition-all hover:scale-[1.03]">
+						<a href="https://github.com/cignaler/cignaler/releases/latest/download/Cignaler.dmg" class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full bg-brand-500 text-white font-display font-semibold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 hover:bg-brand-600 transition-all hover:scale-[1.03]">
 							<Download class="mr-2 h-5 w-5" />
 							Download Cignaler
-						</button>
-						<button class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full border-2 border-white/20 bg-white/10 backdrop-blur-sm text-white font-display font-semibold hover:bg-white/20 transition-all">
+						</a>
+						<a href="https://github.com/cignaler/cignaler" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full border-2 border-white/20 bg-white/10 backdrop-blur-sm text-white font-display font-semibold hover:bg-white/20 transition-all">
 							<Github class="mr-2 h-5 w-5" />
 							View on GitHub
-						</button>
+						</a>
 					</div>
 
 					<!-- Stats -->
@@ -852,7 +929,47 @@
 	</div>
 </section>
 
-<!-- Footer (simplified, no placeholder links) -->
+
+<!-- FAQ Section (GEO: structured answers for AI search engines) -->
+<section id="faq" class="py-20 bg-white">
+	<div class="container mx-auto px-4 md:px-6">
+		<div class="max-w-3xl mx-auto">
+			<h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight text-warm-900 mb-12 text-center" use:reveal>
+				Frequently Asked Questions
+			</h2>
+			<div class="divide-y divide-warm-200" use:reveal={{ delay: 100 }}>
+				<div class="py-6">
+					<h3 class="font-display text-lg font-bold text-warm-900 mb-2">What is Cignaler?</h3>
+					<p class="text-warm-500 leading-relaxed">Cignaler is a free, open-source desktop application that monitors GitLab CI/CD pipelines from your system tray. Built with Tauri 2 and Rust, it polls your pipelines every 60 seconds and sends native notifications when builds fail — so you never have to keep a CI dashboard tab open.</p>
+				</div>
+				<div class="py-6">
+					<h3 class="font-display text-lg font-bold text-warm-900 mb-2">What CI platforms does Cignaler support?</h3>
+					<p class="text-warm-500 leading-relaxed">Cignaler currently supports GitLab CI/CD. Support for GitHub Actions and Jenkins is planned.</p>
+				</div>
+				<div class="py-6">
+					<h3 class="font-display text-lg font-bold text-warm-900 mb-2">Is Cignaler free?</h3>
+					<p class="text-warm-500 leading-relaxed">Yes, Cignaler is completely free and open source. You can view the source code and contribute on <a href="https://github.com/cignaler/cignaler" target="_blank" rel="noopener noreferrer" class="text-brand-600 hover:text-brand-700 underline">GitHub</a>.</p>
+				</div>
+				<div class="py-6">
+					<h3 class="font-display text-lg font-bold text-warm-900 mb-2">What platforms does Cignaler run on?</h3>
+					<p class="text-warm-500 leading-relaxed">Cignaler is currently available for macOS. Windows and Linux support is coming soon.</p>
+				</div>
+				<div class="py-6">
+					<h3 class="font-display text-lg font-bold text-warm-900 mb-2">How does Cignaler work?</h3>
+					<p class="text-warm-500 leading-relaxed">Cignaler runs as a system tray application. You create watchers for specific GitLab projects and branches. It polls your pipelines every 60 seconds and sends native desktop notifications when a build fails. Results are cached locally in SQLite so your data is always ready.</p>
+				</div>
+				<div class="py-6">
+					<h3 class="font-display text-lg font-bold text-warm-900 mb-2">Does Cignaler collect any data?</h3>
+					<p class="text-warm-500 leading-relaxed">No. Cignaler is fully local — all data stays on your machine. There is no telemetry, analytics, or external data collection of any kind. Read our <a href="/privacy" class="text-brand-600 hover:text-brand-700 underline">privacy policy</a> for details.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+</main>
+
+<!-- Footer -->
 <footer class="bg-warm-50 border-t border-warm-200">
 	<div class="container mx-auto px-4 md:px-6 py-12">
 		<div class="flex flex-col md:flex-row justify-between items-start gap-8 mb-8">
@@ -874,13 +991,14 @@
 					<ul class="space-y-2 text-sm">
 						<li><a href="#features" class="text-warm-500 hover:text-warm-900 transition-colors">Features</a></li>
 						<li><a href="#how-it-works" class="text-warm-500 hover:text-warm-900 transition-colors">How it works</a></li>
+						<li><a href="#faq" class="text-warm-500 hover:text-warm-900 transition-colors">FAQ</a></li>
 					</ul>
 				</div>
 				<div>
 					<h3 class="font-display font-semibold text-warm-900 mb-3 text-sm">Resources</h3>
 					<ul class="space-y-2 text-sm">
-						<li><a href="https://github.com/ostwi/cignaler" target="_blank" rel="noopener noreferrer" class="text-warm-500 hover:text-warm-900 transition-colors">GitHub</a></li>
-						<li><a href="https://github.com/ostwi/cignaler" target="_blank" rel="noopener noreferrer" class="text-warm-500 hover:text-warm-900 transition-colors">Documentation</a></li>
+						<li><a href="https://github.com/cignaler/cignaler" target="_blank" rel="noopener noreferrer" class="text-warm-500 hover:text-warm-900 transition-colors">GitHub</a></li>
+						<li><a href="https://github.com/cignaler/cignaler#readme" target="_blank" rel="noopener noreferrer" class="text-warm-500 hover:text-warm-900 transition-colors">Documentation</a></li>
 					</ul>
 				</div>
 			</div>
@@ -892,7 +1010,8 @@
 				&copy; 2026 Cignaler. All rights reserved.
 			</p>
 			<div class="flex items-center gap-6 text-sm text-warm-400">
-				<a href="https://github.com/ostwi/cignaler" target="_blank" rel="noopener noreferrer" class="hover:text-warm-900 transition-colors flex items-center gap-1.5">
+				<a href="/privacy" class="hover:text-warm-900 transition-colors">Privacy Policy</a>
+				<a href="https://github.com/cignaler/cignaler" target="_blank" rel="noopener noreferrer" class="hover:text-warm-900 transition-colors flex items-center gap-1.5">
 					<Github class="h-4 w-4" />
 					GitHub
 				</a>
