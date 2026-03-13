@@ -1,14 +1,7 @@
 <script lang="ts">
-	import { Github, Activity, Terminal, Menu, X, Copy, Check } from 'lucide-svelte';
+	import { Github, Download, Menu, X } from 'lucide-svelte';
 
 	let mobileMenuOpen = $state(false);
-	let copied = $state(false);
-
-	function copyInstallCommand() {
-		navigator.clipboard.writeText('brew install cignaler');
-		copied = true;
-		setTimeout(() => (copied = false), 2000);
-	}
 
 	// Intersection Observer action for scroll-triggered animations
 	function reveal(node: HTMLElement, options: { delay?: number; threshold?: number } = {}) {
@@ -47,9 +40,7 @@
 		<div class="flex h-16 items-center justify-between">
 			<!-- Logo -->
 			<div class="flex items-center gap-2">
-				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-white">
-					<Activity class="h-5 w-5" />
-				</div>
+				<img src="/cignaler_icon.png" alt="Cignaler" class="h-8 w-8 rounded-lg" />
 				<span class="font-display text-xl font-bold tracking-tight text-warm-900">Cignaler</span>
 			</div>
 
@@ -57,13 +48,13 @@
 			<nav class="hidden md:flex items-center gap-8 text-sm font-medium text-warm-500">
 				<a href="#features" class="transition-colors hover:text-warm-900">Features</a>
 				<a href="#how-it-works" class="transition-colors hover:text-warm-900">How it works</a>
-				<a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-warm-900">GitHub</a>
+				<a href="https://github.com/ostwi/cignaler" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-warm-900">GitHub</a>
 			</nav>
 
 			<!-- CTA + Mobile Toggle -->
 			<div class="flex items-center gap-3">
 				<button class="hidden sm:flex items-center justify-center whitespace-nowrap rounded-lg font-display font-semibold transition-colors h-9 px-4 text-sm bg-warm-900 text-white hover:bg-warm-800 shadow-sm">
-					Install Cignaler
+					Download Cignaler
 				</button>
 				<button
 					class="flex md:hidden items-center justify-center h-9 w-9 rounded-lg text-warm-600 hover:bg-warm-100 transition-colors"
@@ -84,10 +75,10 @@
 			<nav class="md:hidden border-t border-warm-200/60 py-4 space-y-1">
 				<a href="#features" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors" onclick={() => (mobileMenuOpen = false)}>Features</a>
 				<a href="#how-it-works" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors" onclick={() => (mobileMenuOpen = false)}>How it works</a>
-				<a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors">GitHub</a>
+				<a href="https://github.com/ostwi/cignaler" target="_blank" rel="noopener noreferrer" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors">GitHub</a>
 				<div class="pt-2">
 					<button class="w-full flex items-center justify-center rounded-lg font-display font-semibold h-10 text-sm bg-warm-900 text-white hover:bg-warm-800">
-						Install Cignaler
+						Download Cignaler
 					</button>
 				</div>
 			</nav>
@@ -114,8 +105,8 @@
 						<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-400 opacity-75"></span>
 						<span class="relative inline-flex rounded-full h-2 w-2 bg-accent-500"></span>
 					</span>
-					<span class="text-warm-500">v2.0 is live:</span>
-					<span class="font-semibold text-brand-600">Intelligent Watchers</span>
+					<span class="text-warm-500">Early Access</span>
+					<span class="font-semibold text-brand-600">Desktop CI Monitor</span>
 				</div>
 			</div>
 
@@ -152,31 +143,23 @@
 				<button
 					class="h-14 px-8 text-lg rounded-full bg-brand-500 text-white font-display font-semibold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 hover:bg-brand-600 transition-all hover:scale-[1.03] flex items-center gap-2"
 				>
-					<Terminal class="h-5 w-5" />
-					Install Cignaler
+					<Download class="h-5 w-5" />
+					Download Cignaler
 				</button>
-				<button
+				<a
+					href="https://github.com/ostwi/cignaler"
+					target="_blank"
+					rel="noopener noreferrer"
 					class="h-14 px-8 text-lg rounded-full border-2 border-warm-300 bg-white text-warm-900 font-display font-semibold hover:bg-warm-50 transition-all flex items-center gap-2"
 				>
 					<Github class="h-5 w-5" />
 					Star on GitHub
-				</button>
+				</a>
 			</div>
 
-			<!-- Install command -->
+			<!-- Platform availability -->
 			<div class="mt-6" use:reveal={{ delay: 400 }}>
-				<button
-					onclick={copyInstallCommand}
-					class="inline-flex items-center gap-3 rounded-xl bg-warm-900 px-5 py-2.5 font-mono text-sm text-warm-300 hover:bg-warm-800 transition-colors group"
-				>
-					<span class="text-warm-500">$</span>
-					<span>brew install cignaler</span>
-					{#if copied}
-						<Check class="h-4 w-4 text-accent-400" />
-					{:else}
-						<Copy class="h-4 w-4 text-warm-500 group-hover:text-warm-300 transition-colors" />
-					{/if}
-				</button>
+				<p class="text-sm text-warm-400">Available for macOS, Windows & Linux</p>
 			</div>
 		</div>
 
@@ -190,62 +173,136 @@
 
 				<!-- Main Screenshot Container -->
 				<div
-					class="relative bg-warm-950 rounded-2xl border border-warm-800/50 shadow-2xl overflow-hidden ring-1 ring-white/10"
+					class="relative bg-white rounded-2xl border border-warm-200/50 shadow-2xl overflow-hidden ring-1 ring-black/5"
 				>
-					<!-- Browser Chrome -->
-					<div class="h-12 bg-warm-900/50 backdrop-blur-md border-b border-white/5 flex items-center px-6 justify-between">
+					<!-- Window Chrome -->
+					<div class="h-12 bg-warm-100/80 backdrop-blur-md border-b border-warm-200/60 flex items-center px-6 justify-between">
 						<div class="flex gap-2">
 							<div class="h-3 w-3 rounded-full bg-[#FF5F56] border border-[#E0443E]"></div>
 							<div class="h-3 w-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]"></div>
 							<div class="h-3 w-3 rounded-full bg-[#27C93F] border border-[#1AAB29]"></div>
 						</div>
-						<div class="text-xs font-mono text-warm-500 flex items-center gap-2">
-							<Activity class="h-3 w-3" />
-							cignaler-pro
-						</div>
+						<div class="text-xs font-mono text-warm-500">cignaler</div>
 						<div class="w-16"></div>
 					</div>
 
 					<!-- Dashboard Content -->
-					<div class="relative aspect-[16/10] bg-warm-900 w-full overflow-hidden">
-						<div class="p-6">
-							<div class="mb-4 flex items-center justify-between">
-								<div class="flex items-center gap-3">
-									<div class="rounded-lg bg-brand-500 px-3 py-1.5 text-sm font-medium text-white">All Pipelines</div>
-									<div class="rounded-lg bg-white px-3 py-1.5 text-sm text-warm-600">Failed (3)</div>
+					<div class="relative aspect-[16/10] bg-white w-full overflow-hidden">
+						<div class="flex h-full">
+							<!-- Sidebar -->
+							<div class="w-52 border-r border-warm-200 bg-warm-50 hidden sm:flex flex-col">
+								<div class="p-4 flex items-center gap-2.5">
+									<img src="/cignaler_icon.png" alt="" class="h-8 w-8 rounded-lg" />
+									<div>
+										<div class="text-sm font-bold text-warm-900 leading-tight">Cignaler</div>
+										<div class="text-[10px] text-warm-400 font-semibold tracking-widest uppercase">Pipelines</div>
+									</div>
 								</div>
-								<button class="rounded-lg bg-warm-900 px-4 py-2 text-sm text-white border border-warm-700">View all workflows</button>
+								<div class="px-4 mb-3">
+									<div class="w-full py-2 rounded-lg bg-brand-500 text-white text-xs font-semibold text-center">+ Add New Watcher</div>
+								</div>
+								<div class="px-4 mb-2">
+									<div class="text-[10px] text-warm-400 font-semibold tracking-wider uppercase">Watchers <span class="ml-1 inline-flex items-center justify-center h-4 w-4 rounded bg-warm-200 text-warm-500 text-[9px] font-bold">2</span></div>
+								</div>
+								<div class="px-3 space-y-1">
+									<div class="flex items-center gap-2.5 px-2 py-2 rounded-lg">
+										<div class="h-2 w-2 rounded-full bg-green-500 shrink-0"></div>
+										<div class="min-w-0">
+											<div class="text-xs text-warm-900 font-medium truncate">fix-pipeline-caching</div>
+											<div class="text-[10px] text-warm-400">Monitoring</div>
+										</div>
+									</div>
+									<div class="flex items-center gap-2.5 px-2 py-2 rounded-lg">
+										<div class="h-2 w-2 rounded-full bg-green-500 shrink-0"></div>
+										<div class="min-w-0">
+											<div class="text-xs text-warm-900 font-medium truncate">improve-ui-performance</div>
+											<div class="text-[10px] text-warm-400">Monitoring</div>
+										</div>
+									</div>
+								</div>
+								<div class="mt-auto p-4">
+									<div class="text-[10px] text-warm-300">v0.0.1</div>
+								</div>
 							</div>
 
-							<div class="space-y-3">
-								<div class="flex items-center gap-4 rounded-lg bg-white p-4 shadow-sm">
-									<div class="flex h-2 w-2 rounded-full bg-red-500"></div>
-									<div class="flex-1">
-										<div class="mb-1 font-medium text-warm-900">Backend API</div>
-										<div class="text-sm text-warm-500">main branch &bull; 2 minutes ago</div>
+							<!-- Main content -->
+							<div class="flex-1 flex flex-col min-w-0">
+								<!-- Header -->
+								<div class="p-5 pb-3 border-b border-warm-100">
+									<div class="flex items-center justify-between mb-1">
+										<div class="flex items-center gap-3">
+											<div class="text-lg font-bold text-warm-900">fix-pipeline-caching</div>
+											<span class="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-[10px] font-semibold text-green-700"><span class="h-1.5 w-1.5 rounded-full bg-green-500"></span> Active</span>
+										</div>
+										<div class="text-[10px] text-warm-400 hidden md:block">Last sync: 07/02/2026, 00:07:54</div>
 									</div>
-									<div class="text-sm text-warm-500">Deploy failed</div>
+									<div class="text-xs text-warm-400">acmecorp/acme @ cig-3222-fix-pipeline-caching</div>
 								</div>
-								<div class="flex items-center gap-4 rounded-lg bg-white p-4 shadow-sm">
-									<div class="flex h-2 w-2 rounded-full bg-green-500"></div>
-									<div class="flex-1">
-										<div class="mb-1 font-medium text-warm-900">Frontend Build</div>
-										<div class="text-sm text-warm-500">develop branch &bull; 5 minutes ago</div>
+
+								<!-- Pipeline list -->
+								<div class="flex-1 overflow-hidden">
+									<div class="divide-y divide-warm-100">
+										<!-- Row 1 - Success -->
+										<div class="flex items-center px-5 py-3 gap-4">
+											<div class="w-1 self-stretch rounded-full bg-green-400"></div>
+											<span class="inline-flex items-center gap-1 rounded-md bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700 shrink-0"><span class="text-green-500">&#10003;</span> SUCCESS</span>
+											<div class="flex-1 min-w-0">
+												<div class="text-xs font-medium text-warm-800 truncate">refs/merge-requests/16883/train</div>
+												<div class="text-[10px] text-warm-400 truncate">merge_request_event &middot; 3bc39d4 &middot; 3h ago</div>
+											</div>
+											<div class="text-[10px] text-warm-400 shrink-0 hidden md:block">Jan 29</div>
+											<div class="text-[10px] text-brand-500 font-medium shrink-0 hidden md:block">Details</div>
+										</div>
+										<!-- Row 2 - Cancelled -->
+										<div class="flex items-center px-5 py-3 gap-4">
+											<div class="w-1 self-stretch rounded-full bg-green-400"></div>
+											<span class="inline-flex items-center gap-1 rounded-md bg-warm-100 px-2 py-0.5 text-[10px] font-semibold text-warm-500 shrink-0"><span class="text-warm-400">&bull;</span> CANCELLED</span>
+											<div class="flex-1 min-w-0">
+												<div class="text-xs font-medium text-warm-800 truncate">refs/merge-requests/16883/train</div>
+												<div class="text-[10px] text-warm-400 truncate">merge_request_event &middot; fbc3c34 &middot; 3h ago</div>
+											</div>
+											<div class="text-[10px] text-warm-400 shrink-0 hidden md:block">Jan 29</div>
+											<div class="text-[10px] text-brand-500 font-medium shrink-0 hidden md:block">Details</div>
+										</div>
+										<!-- Row 3 - Failed -->
+										<div class="flex items-center px-5 py-3 gap-4 bg-red-50/50">
+											<div class="w-1 self-stretch rounded-full bg-green-400"></div>
+											<span class="inline-flex items-center gap-1 rounded-md bg-red-100 px-2 py-0.5 text-[10px] font-semibold text-red-600 shrink-0"><span class="text-red-500">&bull;</span> FAILED</span>
+											<div class="flex-1 min-w-0">
+												<div class="text-xs font-medium text-warm-800 truncate">refs/merge-requests/16883/train</div>
+												<div class="text-[10px] text-warm-400 truncate">merge_request_event &middot; 2899439 &middot; 3h ago</div>
+											</div>
+											<div class="text-[10px] text-warm-400 shrink-0 hidden md:block">Jan 29</div>
+											<div class="text-[10px] text-brand-500 font-medium shrink-0 hidden md:block">Details</div>
+										</div>
+										<!-- Row 4 - Cancelled -->
+										<div class="flex items-center px-5 py-3 gap-4">
+											<div class="w-1 self-stretch rounded-full bg-green-400"></div>
+											<span class="inline-flex items-center gap-1 rounded-md bg-warm-100 px-2 py-0.5 text-[10px] font-semibold text-warm-500 shrink-0"><span class="text-warm-400">&bull;</span> CANCELLED</span>
+											<div class="flex-1 min-w-0">
+												<div class="text-xs font-medium text-warm-800 truncate">refs/merge-requests/16883/train</div>
+												<div class="text-[10px] text-warm-400 truncate">merge_request_event &middot; 938165d &middot; 4h ago</div>
+											</div>
+											<div class="text-[10px] text-warm-400 shrink-0 hidden md:block">Jan 29</div>
+											<div class="text-[10px] text-brand-500 font-medium shrink-0 hidden md:block">Details</div>
+										</div>
+										<!-- Row 5 - Success -->
+										<div class="flex items-center px-5 py-3 gap-4">
+											<div class="w-1 self-stretch rounded-full bg-green-400"></div>
+											<span class="inline-flex items-center gap-1 rounded-md bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700 shrink-0"><span class="text-green-500">&#10003;</span> SUCCESS</span>
+											<div class="flex-1 min-w-0">
+												<div class="text-xs font-medium text-warm-800 truncate">eng-3222-fix-known-channel-admin-api</div>
+												<div class="text-[10px] text-warm-400 truncate">external &middot; ed6df69 &middot; 36d ago</div>
+											</div>
+											<div class="text-[10px] text-warm-400 shrink-0 hidden md:block">Jan 29</div>
+											<div class="text-[10px] text-brand-500 font-medium shrink-0 hidden md:block">Details</div>
+										</div>
 									</div>
-									<div class="text-sm text-warm-500">Success</div>
-								</div>
-								<div class="flex items-center gap-4 rounded-lg bg-white p-4 shadow-sm">
-									<div class="flex h-2 w-2 rounded-full bg-red-500"></div>
-									<div class="flex-1">
-										<div class="mb-1 font-medium text-warm-900">Tests</div>
-										<div class="text-sm text-warm-500">feature/auth &bull; 12 minutes ago</div>
-									</div>
-									<div class="text-sm text-warm-500">Tests failed</div>
 								</div>
 							</div>
 						</div>
 						<!-- Gradient Overlay -->
-						<div class="absolute inset-0 bg-gradient-to-t from-warm-950/50 to-transparent pointer-events-none"></div>
+						<div class="absolute inset-0 bg-gradient-to-t from-white/60 to-transparent pointer-events-none"></div>
 					</div>
 				</div>
 
@@ -256,11 +313,11 @@
 				>
 					<div class="flex items-center gap-3">
 						<div class="h-10 w-10 bg-green-100 rounded-lg flex items-center justify-center">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-600"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>
+							<img src="/tray-success.svg" alt="" class="h-5 w-5" />
 						</div>
 						<div>
-							<div class="text-xs text-warm-500 font-medium">Build Passed</div>
-							<div class="text-sm font-bold text-warm-900">frontend/main</div>
+							<div class="text-xs text-warm-500 font-medium">Pipeline Passed</div>
+							<div class="text-sm font-bold text-warm-900">fix-pipeline-caching</div>
 						</div>
 					</div>
 				</div>
@@ -275,20 +332,23 @@
 		<div class="flex flex-col items-center text-center" use:reveal>
 			<p class="text-sm font-medium text-warm-400 uppercase tracking-wider mb-8">Works with your CI stack</p>
 			<div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
-				<!-- GitHub Actions -->
-				<div class="flex items-center gap-3 text-warm-400 hover:text-warm-600 transition-colors">
-					<Github class="h-6 w-6" />
-					<span class="font-display font-semibold text-lg">GitHub Actions</span>
-				</div>
 				<!-- GitLab CI -->
-				<div class="flex items-center gap-3 text-warm-400 hover:text-warm-600 transition-colors">
+				<div class="flex items-center gap-3 text-warm-600 transition-colors relative">
 					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-6 w-6"><path d="m22 13.29-3.33-10a.42.42 0 0 0-.14-.18.38.38 0 0 0-.22-.11.39.39 0 0 0-.23.07.42.42 0 0 0-.14.18l-2.26 6.67H8.32L6.1 3.26a.42.42 0 0 0-.1-.18.38.38 0 0 0-.26-.08.39.39 0 0 0-.23.07.42.42 0 0 0-.14.18L2 13.29a.74.74 0 0 0 .27.83L12 21l9.69-6.88a.71.71 0 0 0 .31-.83Z"/></svg>
 					<span class="font-display font-semibold text-lg">GitLab CI</span>
+					<span class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700">Supported</span>
 				</div>
-				<!-- CircleCI -->
-				<div class="flex items-center gap-3 text-warm-400 hover:text-warm-600 transition-colors">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-6 w-6"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
-					<span class="font-display font-semibold text-lg">CircleCI</span>
+				<!-- GitHub Actions -->
+				<div class="flex items-center gap-3 text-warm-400 opacity-40 transition-colors relative">
+					<Github class="h-6 w-6" />
+					<span class="font-display font-semibold text-lg">GitHub Actions</span>
+					<span class="inline-flex items-center rounded-full bg-warm-200 px-2 py-0.5 text-[10px] font-semibold text-warm-500">Coming Soon</span>
+				</div>
+				<!-- Jenkins -->
+				<div class="flex items-center gap-3 text-warm-400 opacity-40 transition-colors relative">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-6 w-6"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12h6"/><path d="M12 9v6"/></svg>
+					<span class="font-display font-semibold text-lg">Jenkins</span>
+					<span class="inline-flex items-center rounded-full bg-warm-200 px-2 py-0.5 text-[10px] font-semibold text-warm-500">Coming Soon</span>
 				</div>
 			</div>
 		</div>
@@ -406,7 +466,7 @@
 							Focus on <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-accent-400">your work</span>, not the dashboard.
 						</h2>
 						<p class="text-lg text-warm-400 mb-10 leading-relaxed" use:reveal={{ delay: 200 }}>
-							Cignaler filters out the noise. Configure regex watchers to only track the branches and PRs you care about. When something breaks, you'll know. Otherwise, silence is golden.
+							Cignaler filters out the noise. Create watchers to track specific projects and branches you care about. When something breaks, you'll know. Otherwise, silence is golden.
 						</p>
 
 						<div class="space-y-6">
@@ -416,7 +476,7 @@
 								</div>
 								<div>
 									<h4 class="text-base font-semibold text-white mb-1">Curated Watchers</h4>
-									<p class="text-sm text-warm-400">Add only the specific pipelines, branches, or PRs you are personally responsible for.</p>
+									<p class="text-sm text-warm-400">Select a CI server, pick a project, choose a branch &mdash; only see pipelines that matter.</p>
 								</div>
 							</div>
 							<div class="flex gap-4" use:reveal={{ delay: 300 }}>
@@ -433,32 +493,48 @@
 									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5 text-brand-400"><path d="M20 6 9 17l-5-5"></path></svg>
 								</div>
 								<div>
-									<h4 class="text-base font-semibold text-white mb-1">Multi-Provider</h4>
-									<p class="text-sm text-warm-400">Monitor GitHub Actions, GitLab CI, and CircleCI all in one lightweight unified view.</p>
+									<h4 class="text-base font-semibold text-white mb-1">Chrome Extension</h4>
+									<p class="text-sm text-warm-400">Add watchers directly from your browser with the companion Chrome extension.</p>
 								</div>
 							</div>
 						</div>
 					</div>
 
 					<div class="flex justify-center lg:justify-end" use:reveal={{ delay: 200 }}>
-						<div class="relative rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-warm-950">
-							<!-- Simplified terminal (no window chrome traffic lights) -->
-							<div class="h-8 bg-warm-900 border-b border-white/5 flex items-center px-4">
-								<span class="text-xs text-warm-500 font-mono">cignaler status</span>
+						<div class="relative rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-warm-950 w-full max-w-sm">
+							<!-- Window chrome -->
+							<div class="h-10 bg-warm-900 border-b border-white/5 flex items-center px-4 gap-2">
+								<div class="flex gap-1.5">
+									<div class="h-2.5 w-2.5 rounded-full bg-[#FF5F56]"></div>
+									<div class="h-2.5 w-2.5 rounded-full bg-[#FFBD2E]"></div>
+									<div class="h-2.5 w-2.5 rounded-full bg-[#27C93F]"></div>
+								</div>
+								<img src="/cignaler_icon.png" alt="" class="h-3.5 w-3.5 rounded-sm ml-2" />
+								<span class="text-xs text-warm-500 font-mono">Cignaler</span>
 							</div>
-							<div class="p-6 bg-warm-900">
+							<div class="p-5 bg-warm-900">
+								<div class="text-xs text-warm-500 font-mono uppercase tracking-wider mb-3">Watched Pipelines</div>
 								<div class="space-y-3">
-									<div class="flex items-center gap-3 bg-warm-800 p-2 rounded-lg border border-warm-700">
-										<div class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-										<span class="text-xs text-warm-300 font-mono">master: passed</span>
+									<div class="flex items-center gap-3 bg-warm-800 p-3 rounded-lg border border-warm-700">
+										<img src="/tray-success.svg" alt="" class="h-3 w-3" />
+										<div class="flex-1 min-w-0">
+											<span class="text-xs text-warm-200 font-mono block truncate">acme/frontend &middot; main</span>
+											<span class="text-[10px] text-warm-500">passed &middot; 3m 42s</span>
+										</div>
 									</div>
-									<div class="flex items-center gap-3 bg-warm-800 p-2 rounded-lg border border-warm-700 opacity-60">
-										<div class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
-										<span class="text-xs text-warm-300 font-mono">feat/ui: building</span>
+									<div class="flex items-center gap-3 bg-warm-800 p-3 rounded-lg border border-red-500/30">
+										<img src="/tray-failed.svg" alt="" class="h-3 w-3" />
+										<div class="flex-1 min-w-0">
+											<span class="text-xs text-warm-200 font-mono block truncate">acme/api &middot; main</span>
+											<span class="text-[10px] text-warm-500">failed &middot; 1m 18s</span>
+										</div>
 									</div>
-									<div class="flex items-center gap-3 bg-warm-800 p-2 rounded-lg border border-warm-700 opacity-40">
-										<div class="h-2 w-2 rounded-full bg-red-500"></div>
-										<span class="text-xs text-warm-300 font-mono">api: failed</span>
+									<div class="flex items-center gap-3 bg-warm-800 p-3 rounded-lg border border-warm-700 opacity-60">
+										<img src="/tray-pending.svg" alt="" class="h-3 w-3" />
+										<div class="flex-1 min-w-0">
+											<span class="text-xs text-warm-200 font-mono block truncate">acme/docs &middot; develop</span>
+											<span class="text-[10px] text-warm-500">running &middot; 28s</span>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -483,7 +559,7 @@
 		</div>
 
 		<div class="grid grid-cols-1 md:grid-cols-6 gap-6 max-w-7xl mx-auto">
-			<!-- Intelligent Watchers Card - Large, dark themed for dominance -->
+			<!-- Pipeline Watchers Card - Large, dark themed for dominance -->
 			<div class="col-span-1 md:col-span-4 md:row-span-2 relative overflow-hidden rounded-3xl border border-warm-800 bg-warm-900 shadow-lg hover:shadow-xl transition-all group" use:reveal>
 				<div class="p-8 h-full flex flex-col justify-between relative z-10">
 					<div class="max-w-md">
@@ -494,20 +570,36 @@
 								<path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path>
 							</svg>
 						</div>
-						<h3 class="font-display text-2xl font-bold mb-3 text-white">Intelligent Watchers</h3>
+						<h3 class="font-display text-2xl font-bold mb-3 text-white">Pipeline Watchers</h3>
 						<p class="text-warm-400 text-lg">
-							Don't watch everything. Define watchers using regex to track specific branches (e.g., <code class="text-xs bg-warm-800 px-1.5 py-0.5 rounded border border-warm-700 text-brand-300 font-mono">feat/.*</code>), PRs, or critical jobs.
+							Create watchers through a simple form &mdash; pick your CI server, select a project, choose a branch. Done.
 						</p>
 					</div>
-					<div class="mt-8 bg-warm-950 rounded-xl p-4 shadow-xl border border-warm-800 transform group-hover:translate-y-[-4px] transition-transform duration-500">
-						<div class="flex items-center gap-2 border-b border-warm-800 pb-3 mb-3">
-							<span class="text-xs text-warm-500 font-mono">cignaler.toml</span>
+					<div class="mt-8 bg-warm-950 rounded-xl p-5 shadow-xl border border-warm-800 transform group-hover:translate-y-[-4px] transition-transform duration-500">
+						<div class="flex items-center gap-2 border-b border-warm-800 pb-3 mb-4">
+							<span class="text-xs text-warm-500 font-medium">Add Watcher</span>
 						</div>
-						<div class="space-y-2 font-mono text-sm">
-							<div class="flex"><span class="text-purple-400 mr-2">[[watchers]]</span></div>
-							<div class="flex"><span class="text-blue-400 min-w-[80px]">name</span><span class="text-warm-400">=</span><span class="text-green-400 ml-2">"Frontend Feature"</span></div>
-							<div class="flex"><span class="text-blue-400 min-w-[80px]">repo</span><span class="text-warm-400">=</span><span class="text-green-400 ml-2">"acme/webapp"</span></div>
-							<div class="flex"><span class="text-blue-400 min-w-[80px]">branch</span><span class="text-warm-400">=</span><span class="text-yellow-400 ml-2">"feat/.*"</span><span class="text-warm-600 ml-4"># RegEx support</span></div>
+						<div class="space-y-3">
+							<div class="flex items-center gap-3">
+								<span class="text-xs text-warm-500 min-w-[56px]">Server</span>
+								<div class="flex-1 flex items-center justify-between bg-warm-800 rounded-lg px-3 py-2 border border-warm-700">
+									<span class="text-xs text-warm-200">GitLab Production</span>
+									<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-warm-500"><path d="m6 9 6 6 6-6"/></svg>
+								</div>
+							</div>
+							<div class="flex items-center gap-3">
+								<span class="text-xs text-warm-500 min-w-[56px]">Project</span>
+								<div class="flex-1 flex items-center bg-warm-800 rounded-lg px-3 py-2 border border-warm-700">
+									<span class="text-xs text-warm-200">acme/frontend</span>
+								</div>
+							</div>
+							<div class="flex items-center gap-3">
+								<span class="text-xs text-warm-500 min-w-[56px]">Branch</span>
+								<div class="flex-1 flex items-center justify-between bg-warm-800 rounded-lg px-3 py-2 border border-warm-700">
+									<span class="text-xs text-warm-200">main</span>
+									<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-warm-500"><path d="m6 9 6 6 6-6"/></svg>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -522,96 +614,88 @@
 					</div>
 					<h3 class="font-display text-2xl font-bold mb-3 text-warm-900">Glanceable Status</h3>
 					<p class="text-warm-500 mb-8">
-						Your CI health lives in your menu bar. Green means go, red means stop.
+						Your CI health lives in your system tray. Green means go, red means stop.
 					</p>
 					<div class="flex-1 flex flex-col justify-end">
 						<div class="bg-warm-950 rounded-t-xl p-4 shadow-xl border-x border-t border-warm-800 transform translate-y-4 group-hover:translate-y-2 transition-transform duration-500">
 							<div class="flex items-center justify-between border-b border-warm-800 pb-3 mb-4">
-								<span class="text-xs text-warm-500 font-mono">Menu Bar</span>
+								<span class="text-xs text-warm-500 font-mono">System Tray</span>
 							</div>
 							<div class="flex items-center gap-3 bg-warm-900 p-2 rounded-lg border border-warm-800 mb-2">
-								<div class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-								<span class="text-xs text-warm-300 font-mono">master: passed</span>
+								<img src="/tray-success.svg" alt="" class="h-3 w-3" />
+								<span class="text-xs text-warm-300 font-mono">acme/frontend main: passed</span>
 							</div>
 							<div class="flex items-center gap-3 bg-warm-900 p-2 rounded-lg border border-warm-800 mb-2 opacity-60">
-								<div class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
-								<span class="text-xs text-warm-300 font-mono">feat/ui: building</span>
+								<img src="/tray-pending.svg" alt="" class="h-3 w-3" />
+								<span class="text-xs text-warm-300 font-mono">acme/api develop: running</span>
 							</div>
 							<div class="flex items-center gap-3 bg-warm-900 p-2 rounded-lg border border-warm-800 opacity-40">
-								<div class="h-2 w-2 rounded-full bg-red-500"></div>
-								<span class="text-xs text-warm-300 font-mono">api: failed</span>
+								<img src="/tray-failed.svg" alt="" class="h-3 w-3" />
+								<span class="text-xs text-warm-300 font-mono">acme/docs main: failed</span>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<!-- Multi-Provider Card -->
+			<!-- Chrome Extension Card -->
 			<div class="col-span-1 md:col-span-2 relative overflow-hidden rounded-3xl border border-warm-200 bg-white shadow-sm hover:shadow-md transition-all group" use:reveal={{ delay: 200 }}>
 				<div class="p-8 h-full flex flex-col relative z-10">
 					<div class="w-10 h-10 rounded-xl bg-accent-500/10 flex items-center justify-center mb-4 text-accent-600">
-						<Terminal class="h-5 w-5" />
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="21.17" x2="12" y1="8" y2="8"></line><line x1="3.95" x2="8.54" y1="6.06" y2="14"></line><line x1="10.88" x2="15.46" y1="21.94" y2="14"></line></svg>
 					</div>
-					<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Multi-Provider</h3>
+					<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Chrome Extension</h3>
 					<p class="text-warm-500 text-sm mb-6">
-						Support for GitHub Actions and GitLab CI.
+						Add watchers straight from your browser with the companion Chrome extension.
 					</p>
-					<div class="space-y-3">
-						<div class="flex items-center justify-between p-3 rounded-xl bg-warm-50 border border-warm-200">
-							<div class="flex items-center gap-2">
-								<Github class="h-4 w-4 text-warm-700" />
-								<span class="text-sm text-warm-700 font-medium">GitHub</span>
-							</div>
-							<div class="h-2 w-2 rounded-full bg-green-500"></div>
+					<div class="p-3 rounded-xl bg-warm-50 border border-warm-200">
+						<div class="flex items-center justify-between mb-2">
+							<span class="text-xs text-warm-500 font-medium">Add to Cignaler</span>
 						</div>
-						<div class="flex items-center justify-between p-3 rounded-xl bg-warm-50 border border-warm-200">
-							<div class="flex items-center gap-2">
-								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-warm-700"><circle cx="12" cy="12" r="10"></circle></svg>
-								<span class="text-sm text-warm-700 font-medium">GitLab</span>
-							</div>
-							<div class="h-2 w-2 rounded-full bg-green-500"></div>
+						<div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white border border-warm-200">
+							<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-warm-400"><path d="m22 13.29-3.33-10a.42.42 0 0 0-.14-.18.38.38 0 0 0-.22-.11.39.39 0 0 0-.23.07.42.42 0 0 0-.14.18l-2.26 6.67H8.32L6.1 3.26a.42.42 0 0 0-.1-.18.38.38 0 0 0-.26-.08.39.39 0 0 0-.23.07.42.42 0 0 0-.14.18L2 13.29a.74.74 0 0 0 .27.83L12 21l9.69-6.88a.71.71 0 0 0 .31-.83Z"/></svg>
+							<span class="text-xs text-warm-700 font-mono">acme/frontend &middot; main</span>
 						</div>
+						<button class="mt-2 w-full text-center text-xs font-semibold text-white bg-brand-500 rounded-lg py-1.5">Watch this project</button>
 					</div>
 				</div>
 			</div>
 
-			<!-- Lightweight Card -->
+			<!-- Native & Lightweight Card -->
 			<div class="col-span-1 md:col-span-2 relative overflow-hidden rounded-3xl border border-warm-200 bg-white shadow-sm hover:shadow-md transition-all group" use:reveal={{ delay: 250 }}>
 				<div class="p-8 h-full flex flex-col relative z-10">
 					<div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center mb-4 text-green-600">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
 					</div>
-					<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Lightweight</h3>
+					<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Native & Lightweight</h3>
 					<p class="text-warm-500 text-sm mb-6">
-						Written in Rust. Fast, efficient, no bloat.
+						Built with Tauri 2 and Rust. Native performance, minimal resource usage.
 					</p>
 					<div class="flex items-center justify-between p-3 rounded-xl bg-warm-50 border border-warm-200">
-						<span class="text-xs text-warm-400 font-mono">Binary size</span>
-						<span class="text-sm font-bold text-green-600 font-mono">~8MB</span>
+						<span class="text-xs text-warm-400 font-mono">Framework</span>
+						<span class="text-sm font-bold text-green-600 font-mono">Tauri 2 + Rust</span>
 					</div>
 				</div>
 			</div>
 
-			<!-- CLI First Card -->
+			<!-- Always Monitoring Card -->
 			<div class="col-span-1 md:col-span-2 relative overflow-hidden rounded-3xl border border-warm-200 bg-white shadow-sm hover:shadow-md transition-all group" use:reveal={{ delay: 300 }}>
 				<div class="p-8 h-full flex flex-col relative z-10">
 					<div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4 text-purple-600">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M12 7v5l3 3"/></svg>
 					</div>
-					<h3 class="font-display text-xl font-bold mb-2 text-warm-900">CLI First</h3>
+					<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Always Monitoring</h3>
 					<p class="text-warm-500 text-sm mb-6">
-						Scriptable, automatable, composable.
+						Polls your pipelines every 60 seconds. Results cached locally so your data is always ready.
 					</p>
-					<div class="font-mono text-sm space-y-1 p-3 rounded-xl bg-warm-50 border border-warm-200">
-						<div class="flex items-center gap-2">
-							<span class="text-warm-400">$</span>
-							<span class="text-brand-600">cignaler</span>
-							<span class="text-accent-600">watch</span>
+					<div class="p-3 rounded-xl bg-warm-50 border border-warm-200 space-y-2">
+						<div class="flex items-center justify-between">
+							<span class="text-xs text-warm-400 font-mono">Polling every</span>
+							<span class="text-sm font-bold text-purple-600 font-mono">60s</span>
 						</div>
-						<div class="flex items-center gap-2">
-							<span class="text-warm-400">$</span>
-							<span class="text-brand-600">cignaler</span>
-							<span class="text-accent-600">status</span>
+						<div class="flex items-center justify-between">
+							<span class="text-xs text-warm-400 font-mono">Last synced</span>
+							<span class="text-xs text-warm-500 font-mono">12s ago</span>
 						</div>
 					</div>
 				</div>
@@ -642,16 +726,13 @@
 					<!-- Step 1 -->
 					<div class="flex flex-col md:flex-row md:items-start gap-6 md:gap-12" use:reveal>
 						<div class="flex-1 md:text-right order-2 md:order-1">
-							<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Install CLI</h3>
+							<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Download the App</h3>
 							<p class="text-warm-500 mb-4">
-								Quick install via Homebrew, npm, or download the binary directly.
+								Download Cignaler for your platform. A lightweight desktop app that lives in your system tray.
 							</p>
-							<div class="inline-block bg-warm-900 rounded-xl px-5 py-3 shadow-lg font-mono text-sm text-left">
-								<div class="flex items-center gap-2">
-									<span class="text-warm-500">$</span>
-									<span class="text-blue-400">brew install</span>
-									<span class="text-warm-300">cignaler</span>
-								</div>
+							<div class="inline-flex items-center gap-2 bg-brand-500 rounded-xl px-5 py-3 shadow-lg text-sm text-white font-semibold">
+								<Download class="h-4 w-4" />
+								Download for macOS
 							</div>
 						</div>
 						<div class="flex items-center justify-center order-1 md:order-2 shrink-0">
@@ -667,16 +748,18 @@
 							<div class="w-14 h-14 rounded-2xl bg-accent-500 text-white flex items-center justify-center text-xl font-display font-bold shadow-lg shadow-accent-500/20">2</div>
 						</div>
 						<div class="flex-1 order-3 md:order-3">
-							<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Configure Watchers</h3>
+							<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Add Your CI Server</h3>
 							<p class="text-warm-500 mb-4">
-								Define which pipelines, branches, or PRs you want to monitor.
+								Open Preferences, add your GitLab server URL and API token. Then create a watcher for any project and branch.
 							</p>
-							<div class="inline-block bg-warm-900 rounded-xl px-5 py-3 shadow-lg font-mono text-sm text-left">
+							<div class="inline-block bg-warm-900 rounded-xl px-5 py-3 shadow-lg text-sm text-left space-y-1.5">
 								<div class="flex items-center gap-2">
-									<span class="text-warm-500">$</span>
-									<span class="text-green-400">cignaler</span>
-									<span class="text-blue-400">add</span>
-									<span class="text-warm-300">--repo acme/webapp</span>
+									<span class="text-warm-500 text-xs min-w-[48px]">Server</span>
+									<span class="text-warm-200 text-xs font-mono">gitlab.company.com</span>
+								</div>
+								<div class="flex items-center gap-2">
+									<span class="text-warm-500 text-xs min-w-[48px]">Project</span>
+									<span class="text-warm-200 text-xs font-mono">acme/frontend</span>
 								</div>
 							</div>
 						</div>
@@ -687,10 +770,10 @@
 						<div class="flex-1 md:text-right order-2 md:order-1">
 							<h3 class="font-display text-xl font-bold mb-2 text-warm-900">Stay Focused</h3>
 							<p class="text-warm-500 mb-4">
-								Get notified only when something you care about breaks. Otherwise, silence.
+								Cignaler polls in the background and updates your tray icon. Green means all clear, red means something needs attention.
 							</p>
 							<div class="inline-flex items-center gap-3 bg-warm-900 rounded-xl px-5 py-3 shadow-lg">
-								<div class="h-3 w-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+								<img src="/tray-success.svg" alt="" class="h-3.5 w-3.5" />
 								<span class="text-sm text-warm-300 font-mono">All systems green</span>
 							</div>
 						</div>
@@ -710,15 +793,8 @@
 	<div class="container mx-auto px-4 md:px-6">
 		<div class="max-w-3xl mx-auto text-center" use:reveal>
 			<blockquote class="font-display text-2xl md:text-3xl font-semibold text-warm-900 leading-relaxed mb-8">
-				"I used to check GitHub Actions 20 times a day. Now Cignaler just taps me on the shoulder when something actually breaks. It's been a game changer for focus."
+				"Your CI pipelines, watched. Your focus, protected. Cignaler sits quietly in your system tray and only speaks up when something breaks."
 			</blockquote>
-			<div class="flex items-center justify-center gap-3">
-				<div class="h-10 w-10 rounded-full bg-warm-200 flex items-center justify-center text-warm-500 font-display font-bold text-sm">SK</div>
-				<div class="text-left">
-					<div class="font-display font-semibold text-warm-900 text-sm">Sarah Kim</div>
-					<div class="text-warm-400 text-sm">Senior Engineer, Vercel</div>
-				</div>
-			</div>
 		</div>
 	</div>
 </section>
@@ -741,13 +817,13 @@
 					</h2>
 
 					<p class="text-xl md:text-2xl text-warm-400 max-w-2xl mx-auto mb-12 leading-relaxed" use:reveal={{ delay: 100 }}>
-						Join thousands of developers who've reclaimed their focus and stopped staring at CI dashboards.
+						Reclaim your focus. Stop staring at CI dashboards and let Cignaler watch your pipelines for you.
 					</p>
 
 					<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8" use:reveal={{ delay: 200 }}>
 						<button class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full bg-brand-500 text-white font-display font-semibold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 hover:bg-brand-600 transition-all hover:scale-[1.03]">
-							<Terminal class="mr-2 h-5 w-5" />
-							Install Cignaler
+							<Download class="mr-2 h-5 w-5" />
+							Download Cignaler
 						</button>
 						<button class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full border-2 border-white/20 bg-white/10 backdrop-blur-sm text-white font-display font-semibold hover:bg-white/20 transition-all">
 							<Github class="mr-2 h-5 w-5" />
@@ -755,35 +831,19 @@
 						</button>
 					</div>
 
-					<!-- Install command -->
-					<div use:reveal={{ delay: 300 }}>
-						<button
-							onclick={copyInstallCommand}
-							class="inline-flex items-center gap-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 px-5 py-2.5 font-mono text-sm text-warm-300 hover:bg-white/20 transition-colors group"
-						>
-							<span class="text-warm-500">$</span>
-							<span>brew install cignaler</span>
-							{#if copied}
-								<Check class="h-4 w-4 text-accent-400" />
-							{:else}
-								<Copy class="h-4 w-4 text-warm-500 group-hover:text-warm-300 transition-colors" />
-							{/if}
-						</button>
-					</div>
-
 					<!-- Stats -->
 					<div class="grid grid-cols-3 gap-8 max-w-2xl mx-auto pt-12 mt-12 border-t border-white/10" use:reveal={{ delay: 400 }}>
 						<div>
-							<div class="font-display text-3xl md:text-4xl font-bold text-white mb-2">10k+</div>
-							<div class="text-sm text-warm-400">Active Users</div>
+							<div class="font-display text-3xl md:text-4xl font-bold text-white mb-2">60s</div>
+							<div class="text-sm text-warm-400">Polling Interval</div>
 						</div>
 						<div>
-							<div class="font-display text-3xl md:text-4xl font-bold text-white mb-2">50k+</div>
-							<div class="text-sm text-warm-400">Pipelines Monitored</div>
+							<div class="font-display text-3xl md:text-4xl font-bold text-white mb-2">Tauri 2</div>
+							<div class="text-sm text-warm-400">Native Framework</div>
 						</div>
 						<div>
-							<div class="font-display text-3xl md:text-4xl font-bold text-white mb-2">99.9%</div>
-							<div class="text-sm text-warm-400">Uptime</div>
+							<div class="font-display text-3xl md:text-4xl font-bold text-white mb-2">SQLite</div>
+							<div class="text-sm text-warm-400">Local Cache</div>
 						</div>
 					</div>
 				</div>
@@ -799,9 +859,7 @@
 			<!-- Brand -->
 			<div class="max-w-xs">
 				<div class="flex items-center gap-2 mb-4">
-					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-white">
-						<Activity class="h-5 w-5" />
-					</div>
+					<img src="/cignaler_icon.png" alt="Cignaler" class="h-8 w-8 rounded-lg" />
 					<span class="font-display text-xl font-bold tracking-tight text-warm-900">Cignaler</span>
 				</div>
 				<p class="text-sm text-warm-500 leading-relaxed">
@@ -821,8 +879,8 @@
 				<div>
 					<h3 class="font-display font-semibold text-warm-900 mb-3 text-sm">Resources</h3>
 					<ul class="space-y-2 text-sm">
-						<li><a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="text-warm-500 hover:text-warm-900 transition-colors">GitHub</a></li>
-						<li><a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="text-warm-500 hover:text-warm-900 transition-colors">Documentation</a></li>
+						<li><a href="https://github.com/ostwi/cignaler" target="_blank" rel="noopener noreferrer" class="text-warm-500 hover:text-warm-900 transition-colors">GitHub</a></li>
+						<li><a href="https://github.com/ostwi/cignaler" target="_blank" rel="noopener noreferrer" class="text-warm-500 hover:text-warm-900 transition-colors">Documentation</a></li>
 					</ul>
 				</div>
 			</div>
@@ -834,7 +892,7 @@
 				&copy; 2026 Cignaler. All rights reserved.
 			</p>
 			<div class="flex items-center gap-6 text-sm text-warm-400">
-				<a href="https://github.com/" target="_blank" rel="noopener noreferrer" class="hover:text-warm-900 transition-colors flex items-center gap-1.5">
+				<a href="https://github.com/ostwi/cignaler" target="_blank" rel="noopener noreferrer" class="hover:text-warm-900 transition-colors flex items-center gap-1.5">
 					<Github class="h-4 w-4" />
 					GitHub
 				</a>
