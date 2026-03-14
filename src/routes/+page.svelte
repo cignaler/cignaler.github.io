@@ -46,7 +46,7 @@
 				"applicationCategory": "DeveloperApplication",
 				"operatingSystem": "macOS",
 				"offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-				"downloadUrl": "https://github.com/cignaler/cignaler/releases/latest/download/Cignaler.dmg",
+				"downloadUrl": "https://github.com/cignaler/cignaler/releases",
 				"url": "https://cignaler.github.io",
 				"softwareVersion": "0.0.1",
 				"author": { "@type": "Organization", "name": "Cignaler", "url": "https://cignaler.github.io" }
@@ -122,7 +122,7 @@
 
 			<!-- CTA + Mobile Toggle -->
 			<div class="flex items-center gap-3">
-				<a href="https://github.com/cignaler/cignaler/releases/latest/download/Cignaler.dmg" class="hidden sm:flex items-center justify-center whitespace-nowrap rounded-lg font-display font-semibold transition-colors h-9 px-4 text-sm bg-warm-900 text-white hover:bg-warm-800 shadow-sm">
+				<a href="https://github.com/cignaler/cignaler/releases" class="hidden sm:flex items-center justify-center whitespace-nowrap rounded-lg font-display font-semibold transition-colors h-9 px-4 text-sm bg-warm-900 text-white hover:bg-warm-800 shadow-sm">
 					Download Cignaler
 				</a>
 				<button
@@ -146,7 +146,7 @@
 				<a href="#how-it-works" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors" onclick={() => (mobileMenuOpen = false)}>How it works</a>
 				<a href="https://github.com/cignaler/cignaler" target="_blank" rel="noopener noreferrer" class="block px-2 py-2 text-sm font-medium text-warm-600 hover:text-warm-900 rounded-lg hover:bg-warm-50 transition-colors">GitHub</a>
 				<div class="pt-2">
-					<a href="https://github.com/cignaler/cignaler/releases/latest/download/Cignaler.dmg" class="w-full flex items-center justify-center rounded-lg font-display font-semibold h-10 text-sm bg-warm-900 text-white hover:bg-warm-800">
+					<a href="https://github.com/cignaler/cignaler/releases" class="w-full flex items-center justify-center rounded-lg font-display font-semibold h-10 text-sm bg-warm-900 text-white hover:bg-warm-800">
 						Download Cignaler
 					</a>
 				</div>
@@ -212,7 +212,7 @@
 			<!-- CTAs -->
 			<div class="flex flex-col sm:flex-row items-center gap-4" use:reveal={{ delay: 300 }}>
 				<a
-					href="https://github.com/cignaler/cignaler/releases/latest/download/Cignaler.dmg"
+					href="https://github.com/cignaler/cignaler/releases"
 					class="h-14 px-8 text-lg rounded-full bg-brand-500 text-white font-display font-semibold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 hover:bg-brand-600 transition-all hover:scale-[1.03] flex items-center gap-2"
 				>
 					<Download class="h-5 w-5" />
@@ -227,17 +227,22 @@
 					<Github class="h-5 w-5" />
 					Star on GitHub
 				</a>
+				<!-- TODO: Replace href with actual Chrome Web Store URL -->
+				<a
+					href="#"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="h-14 px-8 text-lg rounded-full border-2 border-warm-300 bg-white text-warm-900 font-display font-semibold hover:bg-warm-50 transition-all flex items-center gap-2"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="21.17" x2="12" y1="8" y2="8"></line><line x1="3.95" x2="8.54" y1="6.06" y2="14"></line><line x1="10.88" x2="15.46" y1="21.94" y2="14"></line></svg>
+					Chrome Extension
+				</a>
 			</div>
 
 			<!-- Platform availability -->
 			<div class="mt-6" use:reveal={{ delay: 400 }}>
 				<p class="text-sm text-warm-400">Available for macOS · Windows & Linux coming soon</p>
 			</div>
-
-			<!-- What is Cignaler (GEO: factual entity description for AI search engines) -->
-			<p class="mt-8 text-sm text-warm-500 max-w-2xl mx-auto leading-relaxed" use:reveal={{ delay: 500 }}>
-				Cignaler is a free, open-source desktop application that monitors GitLab CI/CD pipelines from your system tray. Built with Tauri 2 and Rust, it polls your pipelines and sends native notifications when builds fail — so you never have to keep a CI dashboard tab open. Unlike browser-based CI dashboards, Cignaler runs natively on your desktop with minimal resource usage.
-			</p>
 		</div>
 
 		<!-- Product Screenshot -->
@@ -898,7 +903,7 @@
 					</p>
 
 					<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8" use:reveal={{ delay: 200 }}>
-						<a href="https://github.com/cignaler/cignaler/releases/latest/download/Cignaler.dmg" class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full bg-brand-500 text-white font-display font-semibold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 hover:bg-brand-600 transition-all hover:scale-[1.03]">
+						<a href="https://github.com/cignaler/cignaler/releases" class="inline-flex items-center justify-center h-14 px-8 text-lg rounded-full bg-brand-500 text-white font-display font-semibold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 hover:bg-brand-600 transition-all hover:scale-[1.03]">
 							<Download class="mr-2 h-5 w-5" />
 							Download Cignaler
 						</a>
