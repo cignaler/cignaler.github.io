@@ -227,9 +227,8 @@
 					<Github class="h-5 w-5" />
 					Star on GitHub
 				</a>
-				<!-- TODO: Replace href with actual Chrome Web Store URL -->
 				<a
-					href="#"
+					href="https://chromewebstore.google.com/detail/cignaler-ci-pipeline-watc/cfggfimeknbkdnknnfhbfggdpkbilied"
 					target="_blank"
 					rel="noopener noreferrer"
 					class="h-14 px-8 text-lg rounded-full border-2 border-warm-300 bg-white text-warm-900 font-display font-semibold hover:bg-warm-50 transition-all flex items-center gap-2"
